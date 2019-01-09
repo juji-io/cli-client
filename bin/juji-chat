@@ -21,6 +21,7 @@ var args = program.args;
 
 if (!args.length) {
     console.error('URL is required');
+    program.outputHelp();
     process.exit(1);
 }
 
@@ -28,6 +29,7 @@ var url = args[0];
 
 if (!program.firstname) {
     console.error('First name is required');
+    program.outputHelp();
     process.exit(1);
 }
 

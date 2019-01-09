@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+
+program
+    .description('Logout from Juji');
+
+program.on('--help', function(){
+    console.log('');
+    console.log('Examples:');
+    console.log('  juji logout');
+});
+
+program.parse(process.argv);
+
+const Preferences = require('preferences');
+
+var prefs = new Preferences('io.juji.client');
+
+prefs.clear();
+
+console.log('Logged out from Juji.');

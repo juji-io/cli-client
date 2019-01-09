@@ -3,14 +3,15 @@
 var program = require('commander');
 
 program
-    .description('issue GraphQL query to Juji')
+    .description('Issue GraphQL query to Juji')
     .arguments('<query>')
-    .option('-v, --variables [variables]', 'GraphQL variables');
+    .option('-v, --variables [variables]', 'supplies GraphQL variables in JSON format');
 
 program.on('--help', function(){
-    console.log('')
+    console.log('');
     console.log('Examples:');
-    console.log('  juji query \"{getBrands {name}}\"');
+    console.log('  juji query \'{getBrands {name}}\'');
+    console.log('  juji query -v \'{\"brandName\": \"mycorp"}\' \'query engagements($brandName: String!) {getEngagementsByBrand(brandName: $brandName) {name order status}}\'');
 });
 
 program.parse(process.argv);
@@ -19,28 +20,34 @@ var args = program.args;
 
 if (!args.length) {
     console.error('Query is required');
+    console.log('');
+    program.outputHelp();
     process.exit(1);
 }
 
 var query = args[0];
 
-const GraphQLClient = require('graphql-request').GraphQLClient;
-
 const Preferences = require('preferences');
+
+const prefs = new Preferences('io.juji.client');
+
+if (prefs.endpoint == null) {
+    console.error('Please \'juji login\' first')
+    console.log('');
+    program.outputHelp();
+    process.exit(1);
+}
+
+const GraphQLClient = require('graphql-request').GraphQLClient;
 
 async function issueQuery() {
 
-    const prefs = new Preferences('io.juji.client');
 
-    const endpoint = prefs.endpoint;
-    const token = prefs.token;
-
-    const graphQLClient = new GraphQLClient(endpoint, {
+    const graphQLClient = new GraphQLClient(prefs.endpoint, {
         headers: {
-            authorization: 'Bearer ' + token,
+            authorization: 'Bearer ' + prefs.token,
         },
     })
-
 
     const variables = program.variables;
 
@@ -48,9 +55,10 @@ async function issueQuery() {
     if (variables == null) {
         data = await graphQLClient.request(query);
     } else {
-        data = await graphQLClient.request(query, variables);
+        data = await graphQLClient.request(query, JSON.parse(variables));
     }
-    console.log(JSON.stringify(data, undefined, 2))
+
+    console.log(JSON.stringify(data, undefined, 2));
 
 }
 

@@ -16,16 +16,12 @@ program.on('--help', function(){
 
 program.parse(process.argv);
 
-if (!program.email) {
-    console.error('Please specify email used for Juji account');
+if (!program.email || !program.password) {
+    console.error('Please specify email and password used for Juji account');
+    console.log('');
+    program.outputHelp();
     process.exit(1);
 }
-
-if (!program.password) {
-    console.error('Please specify password for Juji account');
-    process.exit(1);
-}
-
 
 const request = require('graphql-request').request;
 
@@ -38,14 +34,9 @@ async function getToken() {
     const query = `
     mutation authenticate($input: AuthenticateInput!){
       authenticate(input: $input) {
-        user {
-          name
-          email
-        }
         token
       }
-    }
-    `;
+    }`;
 
     const variables = {
         input: {email: program.email, password: program.password}
@@ -57,7 +48,7 @@ async function getToken() {
     var prefs = new Preferences('io.juji.client');
     prefs.endpoint = endpoint;
     prefs.token = token;
-    console.log(prefs)
+    console.log('Login successful!');
 }
 
 getToken().catch(error => console.error(error))

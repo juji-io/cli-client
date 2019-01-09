@@ -9,7 +9,7 @@ code is written in Javascript on Node.js. Please consult [Juji API reference](ht
 
 In this client, the following commands can be used:
 
-```bash
+```console
 $ juji help
 Usage: juji [options] [command]
 
@@ -35,7 +35,7 @@ Subsequent queries need this token in the request header.
 
 Logout clears the token.
 
-```bash
+```console
 $ juji help login
 Usage: juji-login [options]
 
@@ -58,7 +58,7 @@ GraphQL endpoint.
 
 Query string is passed in as is, and the variables need to be the fields of a JSON string. The results is in a JSON document.
 
-```bash
+```console
 $ juji help query
 Usage: juji-query [options] <query>
 

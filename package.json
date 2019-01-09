@@ -1,0 +1,24 @@
+{
+  "name": "juji-client",
+  "version": "0.1.0",
+  "license": "MIT",
+  "bin": {
+    "juji": "bin/juji"
+  },
+  "scripts": {},
+  "devDependencies": {},
+  "dependencies": {
+    "apollo-link": "^1.2.6",
+    "apollo-link-ws": "^1.0.12",
+    "commander": "^2.19.0",
+    "graphql": "^14.0.2",
+    "graphql-request": "^1.8.2",
+    "graphql-tag": "^2.10.0",
+    "inquirer": "^6.2.1",
+    "isomorphic-ws": "^4.0.1",
+    "preferences": "^1.0.2",
+    "request": "^2.88.0",
+    "subscriptions-transport-ws": "^0.9.15",
+    "ws": "^6.1.2"
+  }
+}

@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+
+program
+    .description('Chat with a Juji bot')
+    .arguments('<url>')
+    .option('-f, --firstname <firstName>', 'first name')
+    .option('-l, --lastname [lastName]', 'last name')
+    .option('-e, --email [email]', 'email address');
+
+program.on('--help', function(){
+    console.log('')
+    console.log('Example:');
+    console.log('  juji chat -f Mary https://juji.io/pre-chat/mycorp/3');
+});
+
+program.parse(process.argv);
+
+var args = program.args;
+
+if (!args.length) {
+    console.error('URL is required');
+    process.exit(1);
+}
+
+var url = args[0];
+
+if (!program.firstname) {
+    console.error('First name is required');
+    process.exit(1);
+}
+
+console.log('url is %s and firsname is %s', url, program.firstname);
+console.log('This function is not implemented yet, stay tuned');

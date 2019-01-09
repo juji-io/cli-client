@@ -1,2 +1,3 @@
 # cli-client
-Sample command line client to Juji platform
+
+A simple command line client for Juji platform, intended to show the use of JUji API.

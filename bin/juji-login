@@ -1,0 +1,63 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+
+program
+    .description('Login to Juji')
+    .option('-e, --email <email>', 'email address used for Juji account')
+    .option('-p, --password <password>', 'password for Juji account')
+    .option('-j, --juji [host]', 'Juji host', 'https://juji.io');
+
+program.on('--help', function(){
+    console.log('')
+    console.log('Examples:');
+    console.log('  juji login -e mvp@mycorp.com -p secret');
+});
+
+program.parse(process.argv);
+
+if (!program.email) {
+    console.error('Please specify email used for Juji account');
+    process.exit(1);
+}
+
+if (!program.password) {
+    console.error('Please specify password for Juji account');
+    process.exit(1);
+}
+
+
+const request = require('graphql-request').request;
+
+const Preferences = require('preferences');
+
+async function getToken() {
+
+    const endpoint = program.juji + '/api/graphql';
+
+    const query = `
+    mutation authenticate($input: AuthenticateInput!){
+      authenticate(input: $input) {
+        user {
+          name
+          email
+        }
+        token
+      }
+    }
+    `;
+
+    const variables = {
+        input: {email: program.email, password: program.password}
+    }
+
+    const data = await request(endpoint, query, variables);
+    const token = data.authenticate.token;
+
+    var prefs = new Preferences('io.juji.client');
+    prefs.endpoint = endpoint;
+    prefs.token = token;
+    console.log(prefs)
+}
+
+getToken().catch(error => console.error(error))

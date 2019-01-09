@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+
+program
+    .description('issue GraphQL query to Juji')
+    .arguments('<query>')
+    .option('-v, --variables [variables]', 'GraphQL variables');
+
+program.on('--help', function(){
+    console.log('')
+    console.log('Examples:');
+    console.log('  juji query \"{getBrands {name}}\"');
+});
+
+program.parse(process.argv);
+
+var args = program.args;
+
+if (!args.length) {
+    console.error('Query is required');
+    process.exit(1);
+}
+
+var query = args[0];
+
+const GraphQLClient = require('graphql-request').GraphQLClient;
+
+const Preferences = require('preferences');
+
+async function issueQuery() {
+
+    const prefs = new Preferences('io.juji.client');
+
+    const endpoint = prefs.endpoint;
+    const token = prefs.token;
+
+    const graphQLClient = new GraphQLClient(endpoint, {
+        headers: {
+            authorization: 'Bearer ' + token,
+        },
+    })
+
+
+    const variables = program.variables;
+
+    var data;
+    if (variables == null) {
+        data = await graphQLClient.request(query);
+    } else {
+        data = await graphQLClient.request(query, variables);
+    }
+    console.log(JSON.stringify(data, undefined, 2))
+
+}
+
+issueQuery().catch(error => console.error(error))

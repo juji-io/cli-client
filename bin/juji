@@ -8,6 +8,6 @@ program
     .command('chat <url>', 'chat with a Juji bot')
     .command('login', 'login to Juji')
     .command('logout', 'logout from Juji')
-    .command('upload', 'upload data to Juji for analysis')
-    .command('query', 'issue GraphQL query to Juji')
+    .command('analyze <file>', 'upload data to Juji for analysis')
+    .command('query <query>', 'issue GraphQL query to Juji')
     .parse(process.argv);

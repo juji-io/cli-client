@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+/*
+ * parse command line argument
+ */
+
 var program = require('commander');
 
 program
@@ -23,13 +27,19 @@ if (!program.email || !program.password) {
     process.exit(1);
 }
 
+
+/*
+ * obtain token and save it
+ */
+
 const request = require('graphql-request').request;
 
 const Preferences = require('preferences');
 
 async function getToken() {
 
-    const endpoint = program.juji + '/api/graphql';
+    const host = program.juji;
+    const endpoint = host + '/api/graphql';
 
     const query = `
     mutation authenticate($input: AuthenticateInput!){
@@ -46,8 +56,11 @@ async function getToken() {
     const token = data.authenticate.token;
 
     var prefs = new Preferences('io.juji.client');
+    prefs.host = host;
     prefs.endpoint = endpoint;
+    prefs.analyze = host + '/api/analyze';
     prefs.token = token;
+
     console.log('Login successful!');
 }
 

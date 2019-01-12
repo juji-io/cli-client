@@ -1,0 +1,78 @@
+#!/usr/bin/env node
+
+
+/*
+ * parse command line argument
+ */
+
+var program = require('commander');
+
+program
+    .description('Upload a file to Juji for analysis')
+    .arguments('<file>');
+
+program.on('--help', function(){
+    console.log('');
+    console.log('Input:');
+    console.log('  The input file name should have either .json or .csv suffix. They should have similar structure: csv file should have two columns, the first being an id column, and the second a text column, and there should be no header; json file should be a vector of objects, where each object has two fields, an \"id \" and a \"text\"');
+    console.log('');
+    console.log('Output:');
+    console.log('  The output will be a csv file with a header, and column names are the name of traits. The output is printed directly to console.');
+    console.log('');
+    console.log('Examples:');
+    console.log('  juji analyze mytext.csv');
+    console.log('  juji analyze mytext.json > result.csv');
+});
+
+program.parse(process.argv);
+
+var args = program.args;
+
+if (!args.length) {
+    console.error('Input file is required');
+    console.log('');
+    program.outputHelp();
+    process.exit(1);
+}
+
+var input = args[0];
+
+
+/*
+ * check permission
+ */
+
+const Preferences = require('preferences');
+
+const prefs = new Preferences('io.juji.client');
+
+if (prefs.token == null) {
+    console.error('Please \'juji login\' first')
+    process.exit(1);
+}
+
+
+/*
+ * send file for analysis
+ */
+
+const fs = require('fs');
+
+const formData = {
+    file: fs.createReadStream(input),
+};
+
+const request = require('request');
+
+request.post({url: prefs.analyze,
+              formData: formData,
+              headers: {
+                  authorization: 'Bearer ' + prefs.token
+              }
+             },
+             function (err, httpResponse, body) {
+                 if (err) {
+                     console.error('Analysis failed:', err);
+                 }
+                 console.log(body);
+             });

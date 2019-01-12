@@ -31,10 +31,8 @@ const Preferences = require('preferences');
 
 const prefs = new Preferences('io.juji.client');
 
-if (prefs.endpoint == null) {
+if (prefs.token == null) {
     console.error('Please \'juji login\' first')
-    console.log('');
-    program.outputHelp();
     process.exit(1);
 }
 
@@ -45,8 +43,8 @@ async function issueQuery() {
 
     const graphQLClient = new GraphQLClient(prefs.endpoint, {
         headers: {
-            authorization: 'Bearer ' + prefs.token,
-        },
+            authorization: 'Bearer ' + prefs.token
+        }
     })
 
     const variables = program.variables;

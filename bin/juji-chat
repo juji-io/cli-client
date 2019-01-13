@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 
+/*
+ * parse command line argument
+ */
+
 var program = require('commander');
 
 program
-    .description('Chat with a Juji bot')
+    .description('Chat with a Juji bot. Does not require login.')
     .arguments('<url>')
     .option('-f, --firstname <firstName>', 'first name')
     .option('-l, --lastname [lastName]', 'last name')
@@ -25,13 +29,45 @@ if (!args.length) {
     process.exit(1);
 }
 
-var url = args[0];
-
 if (!program.firstname) {
     console.error('First name is required');
     program.outputHelp();
     process.exit(1);
 }
 
-console.log('url is %s and firsname is %s', url, program.firstname);
-console.log('This function is not implemented yet, stay tuned');
+
+/*
+ * setup websocket connection
+ */
+
+var url = require('url');
+
+var parsedUrl = url.parse(args[0]);
+
+var wsProto = parsedUrl.protocol.replace(/(http)(s)?\:/, "ws$2:");
+
+// Juji WebSocket handshake endpoint
+var wsUrl = wsProto + '//' + parsedUrl.host + '/api/v1/ws';
+
+const WebSocket = require('isomorphic-ws');
+
+const ws = new WebSocket(wsUrl, {
+    origin: parsedUrl.origin
+});
+
+ws.onopen = function open() {
+    console.log('connected');
+    ws.send(Date.now());
+};
+
+ws.onclose = function close() {
+    console.log('disconnected');
+};
+
+ws.onmessage = function incoming(data) {
+    console.log(`Roundtrip time: ${Date.now() - data} ms`);
+
+    setTimeout(function timeout() {
+        ws.send(Date.now());
+    }, 500);
+};

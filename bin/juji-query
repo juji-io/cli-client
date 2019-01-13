@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 
+/*
+ * parse command line argument
+ */
+
 var program = require('commander');
 
 program
-    .description('Issue GraphQL query to Juji')
+    .description('Issue GraphQL query to Juji. Requires login.')
     .arguments('<query>')
     .option('-v, --variables [variables]', 'supplies GraphQL variables in JSON format');
 
@@ -27,6 +31,11 @@ if (!args.length) {
 
 var query = args[0];
 
+
+/*
+ * check permission
+ */
+
 const Preferences = require('preferences');
 
 const prefs = new Preferences('io.juji.client');
@@ -36,10 +45,14 @@ if (prefs.token == null) {
     process.exit(1);
 }
 
+
+/*
+ * make GraphQL request
+ */
+
 const GraphQLClient = require('graphql-request').GraphQLClient;
 
 async function issueQuery() {
-
 
     const graphQLClient = new GraphQLClient(prefs.endpoint, {
         headers: {

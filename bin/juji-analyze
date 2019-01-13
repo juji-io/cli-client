@@ -8,7 +8,7 @@
 var program = require('commander');
 
 program
-    .description('Upload a file to Juji for analysis')
+    .description('Upload a file to Juji for analysis. Requires login.')
     .arguments('<file>');
 
 program.on('--help', function(){
@@ -58,21 +58,19 @@ if (prefs.token == null) {
 
 const fs = require('fs');
 
-const formData = {
-    file: fs.createReadStream(input),
-};
-
 const request = require('request');
 
-request.post({url: prefs.analyze,
-              formData: formData,
-              headers: {
-                  authorization: 'Bearer ' + prefs.token
-              }
-             },
-             function (err, httpResponse, body) {
-                 if (err) {
-                     console.error('Analysis failed:', err);
-                 }
-                 console.log(body);
-             });
+request.post({
+    url: prefs.analyze,
+    formData: {
+        file: fs.createReadStream(input)
+    },
+    headers: {
+        authorization: 'Bearer ' + prefs.token
+    }
+}, function (err, httpResponse, body) {
+    if (err) {
+        console.error('Analysis failed:', err);
+    }
+    console.log(body);
+});

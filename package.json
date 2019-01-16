@@ -18,6 +18,7 @@
     "isomorphic-ws": "^4.0.1",
     "preferences": "^1.0.2",
     "request": "^2.88.0",
+    "request-promise": "^4.2.2",
     "subscriptions-transport-ws": "^0.9.15",
     "url-parse": "^1.4.4",
     "ws": "^6.1.2"

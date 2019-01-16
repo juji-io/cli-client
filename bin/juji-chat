@@ -9,8 +9,8 @@ var program = require('commander');
 program
     .description('Chat with a Juji bot. Does not require login.')
     .arguments('<url>')
-    .option('-f, --firstname <firstName>', 'first name')
-    .option('-l, --lastname [lastName]', 'last name')
+    .option('-f, --firstName <firstName>', 'first name')
+    .option('-l, --lastName [lastName]', 'last name')
     .option('-e, --email [email]', 'email address');
 
 program.on('--help', function(){
@@ -29,7 +29,9 @@ if (!args.length) {
     process.exit(1);
 }
 
-if (!program.firstname) {
+const url = args[0];
+
+if (!program.firstName) {
     console.error('First name is required');
     program.outputHelp();
     process.exit(1);
@@ -37,37 +39,61 @@ if (!program.firstname) {
 
 
 /*
- * setup websocket connection
+ * setup chat
  */
 
-var url = require('url');
+var chatInfo;
+var ws;
 
-var parsedUrl = url.parse(args[0]);
+const request = require('request-promise');
+const util = require('util');
 
-var wsProto = parsedUrl.protocol.replace(/(http)(s)?\:/, "ws$2:");
+async function startChat() {
 
-// Juji WebSocket handshake endpoint
-var wsUrl = wsProto + '//' + parsedUrl.host + '/api/v1/ws';
+    // obtain chat information
+    const options =  {
+        method: 'POST',
+        url: url,
+        formData: {
+            firstName: program.firstName
+        }
+    };
+    const response = await request(options);
+    chatInfo = JSON.parse(response);
+    console.log(chatInfo);
 
-const WebSocket = require('isomorphic-ws');
+    // setup WebSocket connection
+    const WebSocket = require('isomorphic-ws');
+    ws = new WebSocket(chatInfo.websocketUrl);
 
-const ws = new WebSocket(wsUrl, {
-    origin: parsedUrl.origin
-});
+    // subscribe to chat messages
+    ws.onopen = function open() {
+        console.log('connected');
 
-ws.onopen = function open() {
-    console.log('connected');
-    ws.send(Date.now());
-};
+        const subFormat  = `
+        subscription {
+            chat(input: {
+                participationId: "%s"
+            }) {
+                type
+                role
+                text
+            }
+        }`
+        var subscription = util.format(subFormat, chatInfo.participationId);
+        ws.send(JSON.stringify(subscription));
+    };
 
-ws.onclose = function close() {
-    console.log('disconnected');
-};
+    // receive and send chat messages
+    ws.onmessage = function incoming(data) {
+        console.log(data);
 
-ws.onmessage = function incoming(data) {
-    console.log(`Roundtrip time: ${Date.now() - data} ms`);
+    };
 
-    setTimeout(function timeout() {
-        ws.send(Date.now());
-    }, 500);
-};
+    ws.onclose = function close() {
+        console.log('disconnected');
+    };
+
+}
+
+startChat().catch(error => console.error(error))

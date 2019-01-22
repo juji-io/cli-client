@@ -59,7 +59,7 @@ Currently, only text based chat is supported. GUI forms are not handled yet. A
 sample chat session:
 
 ```console
-$ juji chat https://juji.io/pre-chat/mycorp-962c7a5/2
+$ juji chat -f John https://juji.io/pre-chat/mycorp-962c7a5/2
 === Welcome to Juji Bot ===
 Hey, John, it’s nice to connect again! I cannot wait to find out what you learned at school today.
 What was your favorite subject studied today?

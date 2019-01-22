@@ -1,8 +1,14 @@
 # Juji Client
 
+[![npm version](https://badge.fury.io/js/juji-client.svg)](https://badge.fury.io/js/juji-client)
+
 `juji` is a simple command line client for [Juji platform](https://juji.io). Juji
 platform enables organizations to easily create chatbots to engage their
 audience and to understand their audience through data analytics.
+
+```console
+npm install juji-client
+```
 
 The source code of this project is intended to show the usage of Juji API. The
 code is written in Javascript on Node.js. Please consult [Juji API reference](https://docs.juji.io/api) for description of the Juji API.

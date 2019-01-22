@@ -9,7 +9,7 @@ var program = require('commander');
 program
     .description('Chat with a Juji bot. Does not require login.')
     .arguments('<url>')
-    .option('-f, --firstName <firstName>', 'first name')
+    .option('-f, --firstName <firstName>', 'first name', 'Guest')
     .option('-l, --lastName [lastName]', 'last name')
     .option('-e, --email [email]', 'email address');
 
@@ -45,12 +45,54 @@ if (!program.firstName) {
 var chatInfo;
 var ws;
 
-const request = require('request-promise');
-const util = require('util');
+const request = require('request-promise'),
+      util = require('util'),
+      color = require("colors"),
+      readline = require('readline'),
+      rl = readline.createInterface({
+          input: process.stdin,
+          output: process.stdout
+      });
+
+function console_out(msg) {
+    if (msg != null) {
+        process.stdout.clearLine();
+        process.stdout.cursorTo(0);
+        console.log(color.cyan(msg));
+        rl.prompt(true);
+    }
+}
+
+// take user input and send to server
+const chatFormat = `
+                mutation {
+                    saveChatMessage(input: {
+                        type: "normal"
+                        pid: "%s"
+                        text: "%s"
+                    }) {
+                        success
+                    }
+                }
+                `;
+rl.on('line', (line) => {
+    ws.send(util.format(chatFormat, chatInfo.participationId, line));
+});
+
+rl.on('SIGINT', () => {
+    rl.question('Are you sure you want to exit? ', (answer) => {
+        if (answer.match(/^y(es)?$/i)) {
+            rl.close();
+            process.exit(0);
+        }
+    });
+});
 
 async function startChat() {
 
-    // obtain chat information
+    //
+    // step 1: obtain chat information
+    //
     const options =  {
         method: 'POST',
         url: url,
@@ -60,38 +102,59 @@ async function startChat() {
     };
     const response = await request(options);
     chatInfo = JSON.parse(response);
-    console.log(chatInfo);
 
-    // setup WebSocket connection
+    //
+    // step 2: setup WebSocket connection
+    //
     const WebSocket = require('isomorphic-ws');
     ws = new WebSocket(chatInfo.websocketUrl);
 
-    // subscribe to chat messages
-    ws.onopen = function open() {
-        console.log('connected');
+    //
+    // step 3: subscribe to incoming chat messages
+    //
+    ws.onopen = function () {
 
-        const subFormat  = `
+        const subFormat = `
         subscription {
             chat(input: {
                 participationId: "%s"
             }) {
-                type
                 role
                 text
+                type
             }
         }`
-        var subscription = util.format(subFormat, chatInfo.participationId);
-        ws.send(JSON.stringify(subscription));
+        ws.send(util.format(subFormat, chatInfo.participationId));
     };
 
-    // receive and send chat messages
-    ws.onmessage = function incoming(data) {
-        console.log(data);
+    //
+    // step 4: receive chat messages
+    //
+    ws.onmessage = function (incoming) {
 
-    };
+        var data = JSON.parse(incoming.data);
 
-    ws.onclose = function close() {
-        console.log('disconnected');
+        if ('data' in data && data.data != null)  {
+
+            var d = data.data;
+
+            if ('chat' in d) {
+
+                var message = d.chat;
+
+                if ('text' in message && message.role == 'rep') {
+                    // only print out REP's chat messages
+                    console_out(message.text);
+                } else if ( message.type == 'user-joined') {
+                    // show when the chat starts
+                    console.log(color.blue('=== Welcome to Juji Bot ==='))
+                }
+            }
+
+        } else {
+            console.error(data);
+        }
+
     };
 
 }

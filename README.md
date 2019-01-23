@@ -131,7 +131,8 @@ Examples:
 ## GraphQL query and mutation
 
 After login, `juji query` command can be used to send query and mutation to Juji
-GraphQL endpoint.
+GraphQL endpoint. Consult Juji [GraphiQL](https://juji.io/graphiql/graphiql.html) for
+documentation on the available queries.
 
 Query string is passed in as is, and the variables need to be the fields of a
 JSON object string. The results, a JSON document, is printed to console.

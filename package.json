@@ -1,7 +1,7 @@
 {
     "name": "juji-client",
     "description": "A terminal client for Juji chatbot platform",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "license": "MIT",
     "bin": {
         "juji": "bin/juji"

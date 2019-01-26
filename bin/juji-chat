@@ -134,27 +134,22 @@ async function startChat() {
 
         var data = JSON.parse(incoming.data);
 
-        if ('data' in data && data.data != null)  {
+        // only deal with chat messages, ignore other message types
+        if ('data' in data && 'chat' in data.data)  {
 
-            var d = data.data;
+            var message = data.data.chat;
 
-            if ('chat' in d) {
-
-                var message = d.chat;
-
-                if ('text' in message && message.role == 'rep') {
-                    // only print out REP's chat messages
+            // only print out REP's chat messages
+            if (message.role == 'rep') {
+                if (message.type == 'normal') {
                     console_out(message.text);
                 } else if ( message.type == 'user-joined') {
-                    // show when the chat starts
-                    console.log(color.blue('=== Welcome to Juji Bot ==='))
+                    console.log('');
+                    console.log(color.blue('=== Welcome to Juji Bot ==='));
+                    console.log('');
                 }
             }
-
-        } else {
-            console.error(data);
         }
-
     };
 
 }

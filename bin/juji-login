@@ -10,7 +10,7 @@ program
     .description('Login to Juji')
     .option('-e, --email <email>', 'email address used for Juji account')
     .option('-p, --password <password>', 'password for Juji account')
-    .option('-j, --juji [host]', 'Juji host', 'https://juji.io');
+    .option('-j, --juji [host]', 'Juji host', 'https://juji.ai');
 
 program.on('--help', function(){
     console.log('')

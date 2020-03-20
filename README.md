@@ -52,14 +52,14 @@ Options:
   -h, --help                   output usage information
 
 Example:
-  juji chat -f Mary https://juji.io/pre-chat/mycorp/3
+  juji chat -f Mary https://juji.ai/pre-chat/mycorp/3
 ```
 
 Currently, only text based chat is supported. GUI forms are not handled yet. A
 sample chat session:
 
 ```console
-$ juji chat -f John https://juji.io/pre-chat/mycorp-962c7a5/2
+$ juji chat -f John https://juji.ai/pre-chat/mycorp-962c7a5/2
 === Welcome to Juji Bot ===
 Hey, John, it’s nice to connect again! I cannot wait to find out what you learned at school today.
 What was your favorite subject studied today?
@@ -91,7 +91,7 @@ Login to Juji
 Options:
   -e, --email <email>        email address used for Juji account
   -p, --password <password>  password for Juji account
-  -j, --juji [host]          Juji host (default: "https://juji.io")
+  -j, --juji [host]          Juji host (default: "https://juji.ai")
   -h, --help                 output usage information
 
 Examples:
@@ -131,7 +131,7 @@ Examples:
 ## GraphQL query and mutation
 
 After login, `juji query` command can be used to send query and mutation to Juji
-GraphQL endpoint. Consult Juji [GraphiQL](https://juji.io/graphiql/graphiql.html) for
+GraphQL endpoint. Consult Juji [GraphiQL](https://juji.ai/graphiql/graphiql.html) for
 documentation on the available queries.
 
 Query string is passed in as is, and the variables need to be the fields of a

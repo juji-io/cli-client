@@ -68,7 +68,7 @@ if (prefs.token == null) {
 }
 
 /*
- * send file for analysis
+ * send file to upload
  */
 
 const fs = require('fs');

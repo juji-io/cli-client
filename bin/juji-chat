@@ -122,6 +122,14 @@ async function startChat() {
                 role
                 text
                 type
+                display{
+                    data{
+                        questions{
+                            heading
+                            kind
+                        }
+                    }
+                }
             }
         }`
         ws.send(util.format(subFormat, chatInfo.participationId));
@@ -138,11 +146,17 @@ async function startChat() {
         if ('data' in data && 'chat' in data.data)  {
 
             var message = data.data.chat;
+            // console.log(message.display)
 
             // only print out REP's chat messages
             if (message.role == 'rep') {
                 if (message.type == 'normal') {
                     console_out(message.text);
+                    if (message.display){
+                        message.display.data.questions.forEach(function (value, index, array){
+                            console_out(value.kind + ' GUI question: ' + value.heading);
+                        })
+                    }
                 } else if ( message.type == 'user-joined') {
                     console.log('');
                     console.log(color.blue('=== Welcome to Juji Bot ==='));

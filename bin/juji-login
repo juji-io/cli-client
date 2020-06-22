@@ -59,6 +59,7 @@ async function getToken() {
     prefs.host = host;
     prefs.endpoint = endpoint;
     prefs.analyze = host + '/api/analyze';
+    prefs.faqUpload = host + '/api/faq-upload'
     prefs.token = token;
 
     console.log('Login successful!');

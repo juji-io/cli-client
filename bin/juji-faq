@@ -1,0 +1,101 @@
+#!/usr/bin/env node
+
+
+/*
+ * parse command line argument
+ */
+
+var program = require('commander');
+
+program
+    .description('Upload a file to update Juji Q&As. Requires login.')
+    .arguments('<file>')
+    .option('-b, --brand <brand>', 'brand name of the engagement to update')
+    .option('-e, --engagement-order <order>', 'engagement order of the engagement to update')
+    .option('-op, --operation <operation>', 'specify the operation to carry out', 'upload')
+    .option('-o, --overwrite', 'whether to oevrwrite the existing Q&As');
+
+program.on('--help', function(){
+    console.log('');
+    console.log('Input:');
+    console.log('  The input file name should have .csv suffix. Please follow the format described in https://juji.io/docs/design/#handle-free-text-qas. In addition, this client only support utf8 encoded file.');
+    console.log('');
+    console.log('Output:');
+    console.log('  The output will be operation status in json');
+    console.log('');
+    console.log('Examples:');
+    console.log('  juji faq -b mybrandid -e engagementorder -o my_faq.csv');
+});
+
+program.parse(process.argv);
+
+var args = program.args;
+
+if (!args.length) {
+    console.error('Input file is required');
+    console.log('');
+    program.outputHelp();
+    process.exit(1);
+}
+
+if (!program.brand || !program.engagementOrder) {
+    console.error('Please specify brand name and engagement-order of the engagement to be updated');
+    console.log('');
+    program.outputHelp();
+    process.exit(1);
+}
+
+if ('upload' != program.operation) {
+    console.error('Only upload operation is supported right now.');
+    console.log('');
+    program.outputHelp();
+    process.exit(1);
+}
+
+var input = args[0];
+
+/*
+ * check permission
+ */
+
+const Preferences = require('preferences');
+
+const prefs = new Preferences('io.juji.client');
+
+if (prefs.token == null) {
+    console.error('Please \'juji login\' first')
+    process.exit(1);
+}
+
+/*
+ * send file for analysis
+ */
+
+const fs = require('fs');
+
+const request = require('request');
+
+let formData = new Object();
+
+if (program.overwrite) {
+    formData.overwrite = '1'
+}
+
+fs.readFile(input, 'utf8', function (err, data) 
+    {
+        if (err) throw err;
+        formData['file-content'] = data.toString()
+        request.post({
+            url: prefs.faqUpload + '/' + program.brand + '/' + program.engagementOrder,
+            formData: formData,
+            headers: {
+                authorization: 'Bearer ' + prefs.token
+            }
+        }, function (err, httpResponse, body) {
+            if (err) {
+                console.error('Q&A upload failed:', err);
+            }
+            console.log(body);
+        });
+
+     })

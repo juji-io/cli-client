@@ -30,6 +30,7 @@ Commands:
   login           login to Juji
   logout          logout from Juji
   analyze <file>  upload data to Juji for analysis
+  faq <file>      upload Q&A csv to engagement
   query <query>   issue GraphQL query to Juji
   help [cmd]      display help for [cmd]
 ```
@@ -126,6 +127,33 @@ Output:
 Examples:
   juji analyze mytext.csv
   juji analyze mytext.json > result.csv
+```
+
+## Upload Q&A csv to engagement
+
+After login, user can upload Q&A csv to a specified engagement.
+
+```console
+$ juji help faq
+Usage: juji-faq [options] <file>
+
+Upload a file to update Juji Q&As. Requires login.
+
+Options:
+  -b, --brand <brand>             brand name of the engagement to update
+  -e, --engagement-order <order>  engagement order of the engagement to update
+  -op, --operation <operation>    specify the operation to carry out (default: "upload")
+  -o, --overwrite                 whether to oevrwrite the existing Q&As
+  -h, --help                      output usage information
+
+Input:
+  The input file name should have .csv suffix. Please follow the format described in https://juji.io/docs/design/#handle-free-text-qas. In addition, this client only support utf8 encoded file.
+
+Output:
+  The output will be operation status in json
+
+Examples:
+  juji faq -b mybrandid -e engagementorder -o my_faq.csv
 ```
 
 ## GraphQL query and mutation

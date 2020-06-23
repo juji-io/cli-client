@@ -1,0 +1,114 @@
+#!/usr/bin/env node
+
+/*
+ * parse command line argument
+ */
+
+var program = require('commander');
+
+program
+    .description('Upload a file to update config-doc. Requires login.')
+    .arguments('<file>')
+    .option('-op, --operation <operation>', 'specify the operation to carry out', 'upload')
+    .option('-e, --engagement-id <id>', 'engagement id')
+    .option('-j, --is-json', 'indicate the data is in JSON format');
+
+program.on('--help', function(){
+    console.log('');
+    console.log('Input:');
+    console.log('  The input file should be in Clojure EDN format or JSON format. Please follow the description in https://juji.io/docs/config-doc. In addition, this client only support utf8 encoded file.');
+    console.log('');
+    console.log('Output:');
+    console.log('  The output will be operation status in json');
+    console.log('');
+    console.log('Examples:');
+    console.log('  juji config -e my-engaement-id config-doc.edn');
+});
+
+program.parse(process.argv);
+
+var args = program.args;
+
+if (!args.length) {
+    console.error('Input file is required');
+    console.log('');
+    program.outputHelp();
+    process.exit(1);
+}
+
+if (!program.engagementId) {
+    console.error('Please specify engagement-id');
+    console.log('');
+    program.outputHelp();
+    process.exit(1);
+}
+
+if ('upload' != program.operation) {
+    console.error('Only upload operation is supported right now.');
+    console.log('');
+    program.outputHelp();
+    process.exit(1);
+}
+
+var configFile = args[0];
+
+/*
+ * check permission
+ */
+
+const Preferences = require('preferences');
+
+const prefs = new Preferences('io.juji.client');
+
+if (prefs.token == null) {
+    console.error('Please \'juji login\' first')
+    process.exit(1);
+}
+
+/*
+ * send file to upload
+ */
+
+const fs = require('fs');
+
+const GraphQLClient = require('graphql-request').GraphQLClient;
+
+async function updateConfigQuery(configDocStr) {
+
+    const graphQLClient = new GraphQLClient(prefs.endpoint, {
+        headers: {
+            authorization: 'Bearer ' + prefs.token
+        }
+    })
+
+    const query = `
+    mutation updateChatConfig($input: UpdateChatConfigInput!){
+        updateChatConfig(input: $input) {
+            message
+            success
+        }
+    }`;
+
+    var input = {document: configDocStr, engagementId: program.engagementId}
+
+    if (program.isJson){
+        input.isJson = true;
+    }  
+
+    response = await graphQLClient.request(query, {input: input});
+
+    console.log(JSON.stringify(response, undefined, 2));
+
+}
+
+fs.readFile(configFile, 'utf8', function (err, data) 
+    {
+        if (err) throw err;
+
+        const configDocStr = data.toString()
+
+        // console.log(configDocStr)
+
+        updateConfigQuery(configDocStr).catch(error => console.error(error))
+
+     })

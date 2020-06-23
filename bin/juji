@@ -11,4 +11,5 @@ program
     .command('analyze <file>', 'upload data to Juji for analysis')
     .command('query <query>', 'issue GraphQL query to Juji')
     .command('faq <file>', 'upload file to update Q&As')
+    .command('config <file>', 'upload file to update config-doc')
     .parse(process.argv);

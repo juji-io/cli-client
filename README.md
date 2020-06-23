@@ -156,6 +156,32 @@ Examples:
   juji faq -b mybrandid -e engagementorder -o my_faq.csv
 ```
 
+## Upload config-doc edn or json to engagement
+
+After login, user can upload config-doc to a specified engagement.
+
+```console
+$ juji help config
+Usage: juji-config [options] <file>
+
+Upload a file to update config-doc. Requires login.
+
+Options:
+  -op, --operation <operation>  specify the operation to carry out (default: "upload")
+  -e, --engagement-id <id>      engagement id
+  -j, --is-json                 indicate the data is in JSON format
+  -h, --help                    output usage information
+
+Input:
+  The input file should be in Clojure EDN format or JSON format. Please follow the description in https://juji.io/docs/config-doc. In addition, this client only support utf8 encoded file.
+
+Output:
+  The output will be operation status in json
+
+Examples:
+  juji config -e my-engaement-id config-doc.edn
+```
+
 ## GraphQL query and mutation
 
 After login, `juji query` command can be used to send query and mutation to Juji
@@ -210,3 +236,54 @@ Then the second example query above returns something like this:
   ]
 }
 ```
+
+## Creating a new chat using only API, an example
+
+This is useful if you have your own UI, and you would like to utilize Juji's powerful dialog management system. 
+
+1. First you need to log in to your Juji account: 
+```console
+$ juji login -e my@email.com -p mypassword
+```
+
+2. Get your brand id if you don't have it: 
+```console
+$ juji query '{getMe {name}}'
+```
+
+3. At this point, you can either create a new engagement: 
+```console
+$ juji query 'mutation CreateEngagement{createEngagement(input: {brandName: "my-brand-id", name: "MY API BOT", useDefault: true}) {engagement{name, id, order, status}}}'
+```
+or you can use one of your existing engagements:
+```console
+$ juji query -v '{"brandName": "my-brand-id"}' 'query engagements($brandName: String!) {getEngagementsByBrand(brandName: $brandName) {name order status id}}’
+```
+Anyway, you will need to remember the engagement-id and engagement-order.
+
+4. You can optionally update your config-doc if you want to customize your chatflow. The config-doc may be in EDN format:
+```console
+$ juji config -e "engagement-id" /path/to/config-doc.edn
+```
+or in JSON format:
+```console
+$ juji config -e "engagement-id" -j /path/to/config-doc.json
+```
+Refer to [Config-doc Guide](https://juji.io/docs/config-doc) on how to use config-doc to customize your chatflow.
+
+5. You can optionally update your Q&As by upload your customized csv file:
+```console
+$ juji faq -b my-brand-id -e my-engagement-order -o /path/to/faqs.csv
+```
+
+6. Create a web release to deploy your engagement:
+```console
+$ juji query 'mutation CreateRelease{createRelease(input: {engagementId: "engagement-id", type: "web"}) {id, order, type}}'
+```
+
+7. Now your can either go to your web release to directly chat with it or use Juji API to connect to your chat interface. The url is `https://juji.ai/pre-chat/<engagement-id>` If you choose to use the API you can refer to the `juji chat` command above. To try it, just do
+```console
+$ juji chat -f <some-first-name> <chat-url>
+```
+
+You can continue to update your engagement after you have deployed. Follow step 4 and/or 5 to update your chatbot. Then, follow step 6 to create a new release so your change is updated to the chat url.

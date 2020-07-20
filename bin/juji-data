@@ -91,7 +91,7 @@ async function uploadCSV(csvStr) {
     }`;
 
     // TODO handle engagementId
-    var input = {csv: csvStr, identifier: program.identifer};
+    var input = {csv: csvStr, identifier: program.identifier};
 
     response = await graphQLClient.request(query, {input: input});
 

@@ -99,6 +99,85 @@ Examples:
   juji login -e mvp@mycorp.com -p secret
 ```
 
+## Upload Q&A CSV to engagement
+
+After login, user can upload Q&A CSV to a specified engagement.
+
+```console
+$ juji help faq
+Usage: juji-faq [options] <file>
+
+Upload a file to update Juji Q&As. Requires login.
+
+Options:
+  -b, --brand <brand>             brand name of the engagement to update
+  -e, --engagement-order <order>  engagement order of the engagement to update
+  -op, --operation <operation>    specify the operation to carry out (default: "upload")
+  -o, --overwrite                 whether to oevrwrite the existing Q&As
+  -h, --help                      output usage information
+
+Input:
+  The input file name should have .csv suffix. Please follow the format described in https://juji.io/docs/design/#handle-free-text-qas. In addition, this client only support utf8 encoded file.
+
+Output:
+  The output will be operation status in json
+
+Examples:
+  juji faq -b mybrandid -e engagementorder -o my_faq.csv
+```
+
+## Upload config-doc EDN or JSON to engagement
+
+After login, user can upload config-doc for a chat to a specified engagement.
+
+```console
+$ juji help config
+Usage: juji-config [options] <file>
+
+Upload a file to update config-doc. Requires login.
+
+Options:
+  -op, --operation <operation>  specify the operation to carry out (default: "upload")
+  -e, --engagement-id <id>      engagement id
+  -j, --is-json                 indicate the data is in JSON format
+  -h, --help                    output usage information
+
+Input:
+  The input file should be in Clojure EDN format or JSON format. Please follow the description in https://juji.io/docs/config-doc. In addition, this client only support utf8 encoded file.
+
+Output:
+  The output will be operation status in json
+
+Examples:
+  juji config -e my-engaement-id config-doc.edn
+```
+
+## Upload data for Juji bot to use
+
+After login, a CSV file can be uploaded for Juji bot to access as querable data.
+
+```console
+$ juji help data
+Usage: juji-data [options] <file>
+
+Upload a CSV data file for Juji bot to use. Requires login.
+
+Options:
+  -op, --operation <operation>  specify the operation to carry out (default: "upload")
+  -i, --identifier <id>         a unique identifier for this data
+  -e, --engagement-id [id]      if specified, the data is scoped to the specified engagement
+  -h, --help                    output usage information
+
+Input:
+  The input file should be in CSV format. A header with the column names is required. In addition, this client only support utf8 encoded file.
+
+Output:
+  The output will be operation status in json
+
+Examples:
+  juji data -i my-data-1 data-1.csv
+
+```
 
 ## Upload data to analyze
 
@@ -127,59 +206,6 @@ Output:
 Examples:
   juji analyze mytext.csv
   juji analyze mytext.json > result.csv
-```
-
-## Upload Q&A csv to engagement
-
-After login, user can upload Q&A csv to a specified engagement.
-
-```console
-$ juji help faq
-Usage: juji-faq [options] <file>
-
-Upload a file to update Juji Q&As. Requires login.
-
-Options:
-  -b, --brand <brand>             brand name of the engagement to update
-  -e, --engagement-order <order>  engagement order of the engagement to update
-  -op, --operation <operation>    specify the operation to carry out (default: "upload")
-  -o, --overwrite                 whether to oevrwrite the existing Q&As
-  -h, --help                      output usage information
-
-Input:
-  The input file name should have .csv suffix. Please follow the format described in https://juji.io/docs/design/#handle-free-text-qas. In addition, this client only support utf8 encoded file.
-
-Output:
-  The output will be operation status in json
-
-Examples:
-  juji faq -b mybrandid -e engagementorder -o my_faq.csv
-```
-
-## Upload config-doc edn or json to engagement
-
-After login, user can upload config-doc to a specified engagement.
-
-```console
-$ juji help config
-Usage: juji-config [options] <file>
-
-Upload a file to update config-doc. Requires login.
-
-Options:
-  -op, --operation <operation>  specify the operation to carry out (default: "upload")
-  -e, --engagement-id <id>      engagement id
-  -j, --is-json                 indicate the data is in JSON format
-  -h, --help                    output usage information
-
-Input:
-  The input file should be in Clojure EDN format or JSON format. Please follow the description in https://juji.io/docs/config-doc. In addition, this client only support utf8 encoded file.
-
-Output:
-  The output will be operation status in json
-
-Examples:
-  juji config -e my-engaement-id config-doc.edn
 ```
 
 ## GraphQL query and mutation

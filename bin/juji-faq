@@ -81,12 +81,12 @@ if (program.overwrite) {
     formData.overwrite = '1'
 }
 
-fs.readFile(input, 'utf8', function (err, data) 
+fs.readFile(input, 'utf8', function (err, data)
     {
         if (err) throw err;
         formData['file-content'] = data.toString()
         request.post({
-            url: prefs.faqUpload + '/' + program.brand + '/' + program.engagementOrder,
+            url: prefs.faqUploadUrl + '/' + program.brand + '/' + program.engagementOrder,
             formData: formData,
             headers: {
                 authorization: 'Bearer ' + prefs.token

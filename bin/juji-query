@@ -54,7 +54,7 @@ const GraphQLClient = require('graphql-request').GraphQLClient;
 
 async function issueQuery() {
 
-    const graphQLClient = new GraphQLClient(prefs.endpoint, {
+    const graphQLClient = new GraphQLClient(prefs.graphqlUrl, {
         headers: {
             authorization: 'Bearer ' + prefs.token
         }

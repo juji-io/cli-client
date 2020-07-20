@@ -7,22 +7,23 @@
 var program = require('commander');
 
 program
-    .description('Upload a file to update config-doc. Requires login.')
+    .description('Upload a CSV data file for Juji bot to use. Requires login.')
     .arguments('<file>')
     .option('-op, --operation <operation>', 'specify the operation to carry out', 'upload')
-    .option('-e, --engagement-id <id>', 'engagement id')
-    .option('-j, --is-json', 'indicate the data is in JSON format');
+    .option('-i, --identifier <id>', 'a unique identifier for this data')
+    .option('-e, --engagement-id [id]', 'if specified, the data is scoped to the specified engagement')
+    ;
 
 program.on('--help', function(){
     console.log('');
     console.log('Input:');
-    console.log('  The input file should be in Clojure EDN format or JSON format. Please follow the description in https://juji.io/docs/config-doc. In addition, this client only support utf8 encoded file.');
+    console.log('  The input file should be in CSV format. A header with the column names is required. In addition, this client only support utf8 encoded file.');
     console.log('');
     console.log('Output:');
     console.log('  The output will be operation status in json');
     console.log('');
     console.log('Examples:');
-    console.log('  juji config -e my-engaement-id config-doc.edn');
+    console.log('  juji data -i my-data-1 data-1.csv');
 });
 
 program.parse(process.argv);
@@ -36,8 +37,8 @@ if (!args.length) {
     process.exit(1);
 }
 
-if (!program.engagementId) {
-    console.error('Please specify engagement-id');
+if (!program.identifier) {
+    console.error('Please specify an identifier for this data');
     console.log('');
     program.outputHelp();
     process.exit(1);
@@ -50,7 +51,7 @@ if ('upload' != program.operation) {
     process.exit(1);
 }
 
-var configFile = args[0];
+var csvFile = args[0];
 
 /*
  * check permission
@@ -73,7 +74,7 @@ const fs = require('fs');
 
 const GraphQLClient = require('graphql-request').GraphQLClient;
 
-async function updateConfigQuery(configDocStr) {
+async function uploadCSV(csvStr) {
 
     const graphQLClient = new GraphQLClient(prefs.graphqlUrl, {
         headers: {
@@ -82,18 +83,15 @@ async function updateConfigQuery(configDocStr) {
     })
 
     const query = `
-    mutation updateChatConfig($input: UpdateChatConfigInput!){
-        updateChatConfig(input: $input) {
+    mutation updateDataCSV($input: UpdateDataCSVInput!){
+        updateDataCSV(input: $input) {
             message
             success
         }
     }`;
 
-    var input = {document: configDocStr, engagementId: program.engagementId}
-
-    if (program.isJson){
-        input.isJson = true;
-    }
+    // TODO handle engagementId
+    var input = {csv: csvStr, identifier: program.identifer};
 
     response = await graphQLClient.request(query, {input: input});
 
@@ -101,14 +99,13 @@ async function updateConfigQuery(configDocStr) {
 
 }
 
-fs.readFile(configFile, 'utf8', function (err, data)
-    {
-        if (err) throw err;
+fs.readFile(csvFile, 'utf8', function (err, data) {
+    if (err) throw err;
 
-        const configDocStr = data.toString()
+    const csvStr = data.toString();
 
-        // console.log(configDocStr)
+    console.log(csvStr);
 
-        updateConfigQuery(configDocStr).catch(error => console.error(error))
+    uploadCSV(csvStr).catch(error => console.error(error));
 
-     })
+})

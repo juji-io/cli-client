@@ -39,7 +39,7 @@ const Preferences = require('preferences');
 async function getToken() {
 
     const host = program.juji;
-    const endpoint = host + '/api/graphql';
+    const graphqlUrl = host + '/api/graphql';
 
     const query = `
     mutation authenticate($input: AuthenticateInput!){
@@ -52,15 +52,15 @@ async function getToken() {
         input: {email: program.email, password: program.password}
     }
 
-    const data = await request(endpoint, query, variables);
+    const data = await request(graphqlUrl, query, variables);
     const token = data.authenticate.token;
 
     var prefs = new Preferences('io.juji.client');
     prefs.host = host;
-    prefs.endpoint = endpoint;
-    prefs.analyze = host + '/api/analyze';
-    prefs.faqUpload = host + '/api/faq-upload'
     prefs.token = token;
+    prefs.graphqlUrl = graphqlUrl;
+    prefs.analyzeUrl = host + '/api/analyze';
+    prefs.faqUploadUrl = host + '/api/faq-upload';
 
     console.log('Login successful!');
 }

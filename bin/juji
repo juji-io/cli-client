@@ -3,7 +3,7 @@
 var program = require('commander');
 
 program
-    .version('0.1.0')
+    .version('0.3.0')
     .description('Simple Juji client')
     .command('chat <url>', 'chat with a Juji bot')
     .command('login', 'login to Juji')
@@ -12,4 +12,5 @@ program
     .command('query <query>', 'issue GraphQL query to Juji')
     .command('faq <file>', 'upload file to update Q&As')
     .command('config <file>', 'upload file to update config-doc')
+    .command('data <file>', 'upload data for a Juji bot to use')
     .parse(process.argv);

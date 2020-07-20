@@ -61,7 +61,7 @@ const fs = require('fs');
 const request = require('request');
 
 request.post({
-    url: prefs.analyze,
+    url: prefs.analyzeUrl,
     formData: {
         file: fs.createReadStream(input)
     },

@@ -3,7 +3,7 @@
 var program = require('commander');
 
 program
-    .version('0.3.0')
+    .version('0.3.2')
     .description('Simple Juji client')
     .command('chat <url>', 'chat with a Juji bot')
     .command('login', 'login to Juji')

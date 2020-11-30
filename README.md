@@ -6,14 +6,18 @@
 platform enables organizations to easily create chatbots to engage their
 audience and to understand their audience through data analytics.
 
+The source code of this project is intended to show the usage of Juji API. The
+code is written in Javascript on node.js. Please consult [Juji API reference](https://docs.juji.io/api) for description of the Juji API.
+
+## Install
+
+To install Juji Client, you need to first install [node.js](https://nodejs.org/en/) if your system does not have it yet. Then, install Juji client by simply issuing this command on the command line:
+
 ```console
 npm install juji-client
 ```
 
-The source code of this project is intended to show the usage of Juji API. The
-code is written in Javascript on Node.js. Please consult [Juji API reference](https://docs.juji.io/api) for description of the Juji API.
-
-In this client, the following commands can be used:
+Now you should be able to use the client. In this client, the following commands can be used:
 
 ```console
 $ juji help

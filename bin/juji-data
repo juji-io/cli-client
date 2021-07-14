@@ -9,7 +9,7 @@ var program = require('commander');
 program
     .description('Upload a CSV data file for Juji bot to use. Requires login.')
     .arguments('<file>')
-    .option('-op, --operation <operation>', 'specify the operation to carry out', 'upload')
+    .option('-o, --operation <operation>', 'specify the operation to carry out, default is upload, another is erase', 'upload')
     .option('-i, --identifier <id>', 'a unique identifier for this data')
     .option('-e, --engagement-id [id]', 'if specified, the data is scoped to the specified engagement')
     ;
@@ -30,22 +30,15 @@ program.parse(process.argv);
 
 var args = program.args;
 
-if (!args.length) {
+if ('erase' != program.operation && !args.length) {
     console.error('Input file is required');
     console.log('');
     program.outputHelp();
     process.exit(1);
 }
 
-if (!program.identifier) {
+if ('erase' != program.operation && !program.identifier) {
     console.error('Please specify an identifier for this data');
-    console.log('');
-    program.outputHelp();
-    process.exit(1);
-}
-
-if ('upload' != program.operation) {
-    console.error('Only upload operation is supported right now.');
     console.log('');
     program.outputHelp();
     process.exit(1);
@@ -74,13 +67,13 @@ const fs = require('fs');
 
 const GraphQLClient = require('graphql-request').GraphQLClient;
 
-async function uploadCSV(csvStr) {
+const graphQLClient = new GraphQLClient(prefs.graphqlUrl, {
+    headers: {
+        authorization: 'Bearer ' + prefs.token
+    }
+})
 
-    const graphQLClient = new GraphQLClient(prefs.graphqlUrl, {
-        headers: {
-            authorization: 'Bearer ' + prefs.token
-        }
-    })
+async function uploadCSV(csvStr) {
 
     const query = `
     mutation updateDataCSV($input: UpdateDataCSVInput!){
@@ -99,12 +92,38 @@ async function uploadCSV(csvStr) {
 
 }
 
-fs.readFile(csvFile, 'utf8', function (err, data) {
-    if (err) throw err;
+async function eraseData() {
 
-    const csvStr = data.toString();
+    const query = `
+    mutation eraseData($input: EraseDataInput!){
+        eraseData(input: $input) {
+            message
+            success
+        }
+    }`;
+
+    // TODO handle identifiers
+    var input = {scope: ':all'};
+
+    response = await graphQLClient.request(query, {input: input});
+
+    console.log(JSON.stringify(response, undefined, 2));
+
+}
 
 
-    uploadCSV(csvStr).catch(error => console.error(error));
+if ('erase' == program.operation) {
 
-})
+    eraseData().catch(error => console.error(error));
+
+} else {
+
+    fs.readFile(csvFile, 'utf8', function (err, data) {
+        if (err) throw err;
+
+        const csvStr = data.toString();
+
+        uploadCSV(csvStr).catch(error => console.error(error));
+
+    })
+}

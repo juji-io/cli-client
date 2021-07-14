@@ -167,7 +167,7 @@ Usage: juji-data [options] <file>
 Upload a CSV data file for Juji bot to use. Requires login.
 
 Options:
-  -op, --operation <operation>  specify the operation to carry out (default: "upload")
+  -o, --operation <operation>  specify the operation to carry out (default: "upload")
   -i, --identifier <id>         a unique identifier for this data
   -e, --engagement-id [id]      if specified, the data is scoped to the specified engagement
   -h, --help                    output usage information
@@ -180,6 +180,7 @@ Output:
 
 Examples:
   juji data -i my-data-1 data-1.csv
+  juji data -o erase
 
 ```
 

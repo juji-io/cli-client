@@ -8,8 +8,13 @@
 var program = require('commander');
 
 program
-    .description('Upload a file to Juji for analysis. Requires login.')
-    .arguments('<file>');
+    .description('Upload a file to Juji for analysis. Reguire login or API key. See API doc at https://docs.google.com/spreadsheets/d/1T1zObl47vI3axgFCh8H9cs1TfuuZk714UrAUzUgk11Q for more details.')
+    .arguments('<file>')
+    .option('-v, --apiVersion [api-version]', 'Version of the personality analyze to use. By default the most recent version is used.')
+    .option('-i, --inputType [input-type]', 'input type is json or csv', 'csv')
+    .option('-a, --accept [accept]', 'Accept type is json or csv, only applicable for most recent api version', 'csv')
+    .option('-q, --querystring [querystring]', 'Parameter for the request as querystring')
+    .option('-k, --apiKey [api-key]', 'Use API key for authentication');
 
 program.on('--help', function(){
     console.log('');
@@ -21,7 +26,14 @@ program.on('--help', function(){
     console.log('');
     console.log('Examples:');
     console.log('  juji analyze mytext.csv');
-    console.log('  juji analyze mytext.json > result.csv');
+    console.log('  juji analyze mytext.csv -k [apikey]');
+    console.log('  juji analyze mytext.json -i json');
+    console.log('  juji analyze mytext.json -i json -a json');
+    console.log('  juji analyze mytext.json -i json -q \'big5_facets=true&soft_skills=true\'');    
+    console.log('  juji analyze mytext.csv > result.csv');  
+    console.log('  juji analyze mytext.csv -v 2020-01-02');
+    console.log('  juji analyze mytext.json -v 2020-01-02 ');
+
 });
 
 program.parse(process.argv);
@@ -58,19 +70,74 @@ if (prefs.token == null) {
 
 const fs = require('fs');
 
+const qs = require('qs');
+
 const request = require('request');
 
-request.post({
-    url: prefs.analyzeUrl,
-    formData: {
-        file: fs.createReadStream(input)
-    },
-    headers: {
-        authorization: 'Bearer ' + prefs.token
+// request differs between api version
+const v3_realse_time = Date.parse('2021-12-01');
+
+var apiVersion = program.apiVersion || '2022-12-10';
+
+var propertiesObject = { version:apiVersion };
+
+if ( program.querystring ) {
+    propertiesObject = { 
+        ...qs.parse(program.querystring),
+        ...propertiesObject
     }
-}, function (err, httpResponse, body) {
+}
+
+// console.log(propertiesObject);
+var option = {
+    url: prefs.analyzeUrl,
+    qs:propertiesObject
+};
+
+var headers = {
+        Accept: 'text/csv'
+    };
+
+if ( program.apiKey ) {
+    option.auth = {
+        'user': 'apikey',
+        'pass': program.apiKey
+    };
+} else {
+    headers.authorization = 'Bearer ' + prefs.token;
+};
+
+
+
+var returnType = 'csv';
+
+if (  Date.parse(apiVersion) < v3_realse_time ) {
+    option.formData = {
+        file: fs.createReadStream(input)
+    };
+} else {
+    if ( program.inputType == 'json' ) {
+        option.json = true;
+        option.body = require(input);
+    } else {
+        headers['Content-Type'] = 'text/csv';
+        option.body = fs.createReadStream(input);
+    };
+    if ( program.accept == 'json' ) {
+        headers.Accept = 'application/json';
+        returnType = 'json';
+    };
+};
+
+option.headers = headers;    
+
+request.post(option, function (err, httpResponse, body) {
     if (err) {
         console.error('Analysis failed:', err);
     }
-    console.log(body);
+    if ( returnType == 'json' ){
+        console.log(JSON.stringify(body));
+    } else {
+        console.log(body);
+    };
 });

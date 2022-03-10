@@ -197,10 +197,17 @@ trait analysis results.
 $ juji help analyze
 Usage: juji-analyze [options] <file>
 
-Upload a file to Juji for analysis
+Upload a file to Juji for analysis. Reguire login or API key.
 
 Options:
-  -h, --help  output usage information
+  -v, --apiVersion [api-version]   Version of the personality analyze to use. By default the most
+                                   recent version is used.
+  -i, --inputType [input-type]     input type is json or csv (default: "csv")
+  -a, --accept [accept]            Accept type is json or csv, only applicable for most recent api
+                                   version (default: "csv")
+  -q, --querystring [querystring]  Parameter for the request as querystring
+  -k, --apiKey [api-key]           Use API key for authentication
+  -h, --help                       display help for command
 
 Input:
   The input file name should have either .json or .csv suffix. They should have similar structure: csv file should have two columns, the first being an id column, and the second a text column, and there should be no header; json file should be a vector of objects, where each object has two fields, an "id " and a "text"
@@ -210,7 +217,14 @@ Output:
 
 Examples:
   juji analyze mytext.csv
-  juji analyze mytext.json > result.csv
+  juji analyze mytext.csv -k [apikey]
+  juji analyze mytext.json -i json
+  juji analyze mytext.json -i json -a json
+  juji analyze mytext.json -i json -q 'big5_facets=true&soft_skills=true'
+  juji analyze mytext.csv > result.csv
+  juji analyze mytext.csv -v 2020-01-02
+  juji analyze mytext.json -v 2020-01-02 
+
 ```
 
 ## GraphQL query and mutation

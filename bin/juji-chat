@@ -123,12 +123,26 @@ async function startChat() {
                 text
                 type
                 display{
+                    type
                     data{
+                        type
                         questions{
                             heading
                             kind
+                            wording
+                            choices{
+                                text
+                                value
+                                other
+                            }
                         }
                     }
+                }
+                quickReply{
+                    type
+                    text
+                    options
+                    reminder
                 }
             }
         }`
@@ -153,9 +167,19 @@ async function startChat() {
                 if (message.type == 'normal') {
                     console_out(message.text);
                     if (message.display){
+                        console.log(message.display)
                         message.display.data.questions.forEach(function (value, index, array){
                             console_out(value.kind + ' GUI question: ' + value.heading);
+                            if (value.choices){
+                                value.choices.forEach(function (c, i, a){
+                                    console_out('[Choice] text: ' + c.text + '; value: ' + c.value);
+                                })
+                            }
+                            
                         })
+                    }
+                    if (message.quickReply){
+                        console.log(message.quickReply)
                     }
                 } else if ( message.type == 'user-joined') {
                     console.log('');

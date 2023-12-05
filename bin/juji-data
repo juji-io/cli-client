@@ -7,22 +7,24 @@
 var program = require('commander');
 
 program
-    .description('Upload a CSV data file for Juji bot to use. Requires login.')
+    .description('Upload structured data for Juji bot to query. Could be a CSV data file or an EDN API description file. Requires login.')
     .arguments('<file>')
     .option('-o, --operation <operation>', 'specify the operation to carry out, default is upload, another is erase', 'upload')
-    .option('-i, --identifier <id>', 'a unique identifier for this data')
-    .option('-e, --engagement-id [id]', 'if specified, the data is scoped to the specified engagement')
+    .option('-i, --identifier <identifier>', 'a unique identifier for this data, required for CSV file')
+    .option('-t, --type <type>', 'data type: api or csv', 'api')
+    .option('-e, --engagementId <engagementId>', 'if specified, the data is scoped to the specified engagement')
     ;
 
 program.on('--help', function(){
     console.log('');
     console.log('Input:');
-    console.log('  The input file should be in CSV format. A header with the column names is required. In addition, this client only support utf8 encoded file.');
+    console.log('  If the input file is in CSV format, a header with the column names is required. In addition, this client only support utf8 encoded file.');
     console.log('');
     console.log('Output:');
     console.log('  The output will be operation status in json');
     console.log('');
     console.log('Examples:');
+    console.log('  juji data -e 65642a42-e094-42a9-affe-f9b91b0ec571 api-1.edn');
     console.log('  juji data -i my-data-1 data-1.csv');
 });
 
@@ -37,14 +39,14 @@ if ('erase' != program.operation && !args.length) {
     process.exit(1);
 }
 
-if ('erase' != program.operation && !program.identifier) {
+if ('erase' != program.operation && !program.identifier && program.type == 'csv') {
     console.error('Please specify an identifier for this data');
     console.log('');
     program.outputHelp();
     process.exit(1);
 }
 
-var csvFile = args[0];
+var inputFile = args[0];
 
 /*
  * check permission
@@ -83,8 +85,7 @@ async function uploadCSV(csvStr) {
         }
     }`;
 
-    // TODO handle engagementId
-    var input = {csv: csvStr, identifier: program.identifier};
+    var input = {csv: csvStr, identifier: program.identifier, engagementId: program.engagementId, type: program.type};
 
     response = await graphQLClient.request(query, {input: input});
 
@@ -118,7 +119,7 @@ if ('erase' == program.operation) {
 
 } else {
 
-    fs.readFile(csvFile, 'utf8', function (err, data) {
+    fs.readFile(inputFile, 'utf8', function (err, data) {
         if (err) throw err;
 
         const csvStr = data.toString();

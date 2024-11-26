@@ -11,15 +11,15 @@
         "minimist": ">=1.2.2"
     },
     "dependencies": {
+        "bent": "^7.3.12",
         "colors": "^1.4.0",
         "commander": "^6.2.0",
+        "form-data": "^4.0.1",
         "graphql": "^15.8.0",
         "graphql-request": "^3.3.0",
         "isomorphic-ws": "^4.0.1",
         "minimist": ">=1.2.5",
         "preferences": "^2.0.2",
-        "request": "^2.88.0",
-        "request-promise": "^4.2.4",
         "ws": "^7.4.0"
     },
     "repository": {

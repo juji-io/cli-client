@@ -45,7 +45,8 @@ if (!program.firstName) {
 var chatInfo;
 var ws;
 
-const request = require('request-promise'),
+// https://github.com/mikeal/bent same author as deprecated request-promise
+const bent = require('bent'),
       util = require('util'),
       color = require("colors"),
       readline = require('readline'),
@@ -75,11 +76,11 @@ const chatFormat = `
                     }
                 }
                 `;
-rl.on('line', (line) => {
+    rl.on('line', (line) => {
     ws.send(util.format(chatFormat, chatInfo.participationId, line));
 });
 
-rl.on('SIGINT', () => {
+    rl.on('SIGINT', () => {
     rl.question('Are you sure you want to exit? ', (answer) => {
         if (answer.match(/^y(es)?$/i)) {
             rl.close();
@@ -93,14 +94,21 @@ async function startChat() {
     //
     // step 1: obtain chat information
     //
-    const options =  {
-        method: 'POST',
-        url: url,
-        formData: {
-            firstName: program.firstName
-        }
-    };
-    const response = await request(options);
+
+    var FormData = require('form-data');
+    var form = new FormData();
+    form.append('firstName', program.firstName);
+
+    const postJSON = bent('POST', 'string', { 'Content-Type': 'multipart/form-data'});
+    //const postJSON = bent('POST', 'buffer', { 'Content-Type': 'multipart/form-data'});
+
+    const response = await postJSON(url, form, form.getHeaders());
+
+    // console.log(response);
+    // Example chatInfo =
+    // {"chatUrl":"https://juji.ai/chat/67460ae2-a468-4169-a95d-92e4a8aba110",
+    //  "participationId":"67460ae2-a468-4169-a95d-92e4a8aba110",
+    //  "websocketUrl":"wss://juji.ai/api/v1/ws"}
     chatInfo = JSON.parse(response);
 
     //
@@ -175,7 +183,7 @@ async function startChat() {
                                     console_out('[Choice] text: ' + c.text + '; value: ' + c.value);
                                 })
                             }
-                            
+
                         })
                     }
                     if (message.quickReply){

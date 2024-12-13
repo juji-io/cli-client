@@ -1,0 +1,280 @@
+#!/usr/bin/env node
+
+/*
+ * parse command line argument
+ */
+
+var program = require('commander');
+
+program
+    .description('Chat with a Juji bot. Does not require login.')
+    .arguments('<url>')
+    .option('-f, --firstName <firstName>', 'first name', 'Guest')
+    .option('-l, --lastName [lastName]', 'last name')
+    .option('-e, --email [email]', 'email address');
+
+program.on('--help', function () {
+    console.log('')
+    console.log('Example:');
+    console.log('  juji chat -f Mary https://juji.ai/pre-chat/mycorp/3 test_chat_script');
+});
+
+program.parse(process.argv);
+
+var args = program.args;
+
+if (!args.length) {
+    console.error('URL is required');
+    program.outputHelp();
+    process.exit(1);
+}
+
+const url = args[0];
+const fn = args[1];
+
+if (!program.firstName) {
+    console.error('First name is required');
+    program.outputHelp();
+    process.exit(1);
+}
+
+
+/*
+ * setup chat
+ */
+
+var chatInfo;
+var ws;
+var timeoutId;
+var userResp;
+var userRespIx = 0;
+
+// https://github.com/mikeal/bent same author as deprecated request-promise
+const bent = require('bent'),
+    util = require('util'),
+    color = require("colors"),
+    readline = require('readline'),
+    rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+function console_out(msg) {
+    if (msg != null) {
+        process.stdout.clearLine();
+        process.stdout.cursorTo(0);
+        console.log(color.cyan(msg));
+        rl.prompt(true);
+    }
+}
+
+// take user input and send to server
+const chatFormat = `
+                mutation {
+                    saveChatMessage(input: {
+                        type: "normal"
+                        pid: "%s"
+                        text: "%s"
+                    }) {
+                        success
+                    }
+                }
+                `;
+rl.on('line', (line) => {
+    ws.send(util.format(chatFormat, chatInfo.participationId, line));
+});
+
+rl.on('SIGINT', () => {
+    rl.question('Are you sure you want to exit? ', (answer) => {
+        if (answer.match(/^y(es)?$/i)) {
+            rl.close();
+            process.exit(0);
+        }
+    });
+});
+
+function loadChatscript() {
+    var resp = Array();
+    try {
+        const buf = require('fs').readFileSync(fn, 'utf8');
+        var lines = buf.split("\n");
+        console.log("nlines", lines.length);
+        lines.forEach((line, i) => {
+            // console.log(i, ": ", line);
+            if (i == 0) {
+                let foo = line.match(/] (.*): /);
+                chatbot_name = foo[1];
+                console.log("chatbot_name", chatbot_name);
+            } else {
+                let pos = line.indexOf(chatbot_name); // look for chatbot prompt
+
+                var res = `*** ${pos} ${line}`;
+                //console.log(line);
+                if (pos == -1 && line.length > 0) {
+                    let ress = line.split(/] .*: /, 3);
+                    let foo = line.match(/] (.*): /); // extract user name
+                    let bar = line.match(/:text "(.*)"/); // if exist, extract :text value [{:type "Action", :gid "question_30", :question "question_30", :value 0, :text "Economy"}]
+                    if (bar != undefined) {
+                        ress[1] = bar[1].trim();
+                    }
+                    //console.log("bar ", bar)
+                    //console.log("--- res", ress);
+                    //console.log("=== foo", foo);
+                    user_name = foo[1];
+
+                    if (ress.length > 0) {
+                        res = `${user_name}: ${ress[1]}`;
+                    }
+                    //console.log(res);
+                    resp.push(ress[1])
+                }
+            }
+
+        })
+
+        return resp;
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function startChat() {
+
+    //
+    // step 1: obtain chat information
+    //
+
+    var FormData = require('form-data');
+    var form = new FormData();
+    form.append('firstName', program.firstName);
+
+    const postJSON = bent('POST', 'string', { 'Content-Type': 'multipart/form-data' });
+    //const postJSON = bent('POST', 'buffer', { 'Content-Type': 'multipart/form-data'});
+
+    const response = await postJSON(url, form, form.getHeaders());
+
+    // console.log(response);
+    // Example chatInfo =
+    // {"chatUrl":"https://juji.ai/chat/67460ae2-a468-4169-a95d-92e4a8aba110",
+    //  "participationId":"67460ae2-a468-4169-a95d-92e4a8aba110",
+    //  "websocketUrl":"wss://juji.ai/api/v1/ws"}
+    chatInfo = JSON.parse(response);
+
+    //
+    // step 2: setup WebSocket connection
+    //
+    const WebSocket = require('isomorphic-ws');
+    ws = new WebSocket(chatInfo.websocketUrl);
+
+    //
+    // step 3: subscribe to incoming chat messages
+    //
+    ws.onopen = function () {
+
+        const subFormat = `
+        subscription {
+            chat(input: {
+                participationId: "%s"
+            }) {
+                role
+                text
+                type
+                display{
+                    type
+                    data{
+                        type
+                        questions{
+                            heading
+                            kind
+                            wording
+                            choices{
+                                text
+                                value
+                                other
+                            }
+                        }
+                    }
+                }
+                quickReply{
+                    type
+                    text
+                    options
+                    reminder
+                }
+            }
+        }`
+        ws.send(util.format(subFormat, chatInfo.participationId));
+    };
+
+    //
+    // step 4: receive chat messages
+    //
+    ws.onmessage = function (incoming) {
+
+        var data = JSON.parse(incoming.data);
+        //console.log("data: ", data);
+
+        // only deal with chat messages, ignore other message types
+        if ('data' in data && 'chat' in data.data) {
+            // clear timeout
+            clearTimeout(timeoutId);
+
+            var message = data.data.chat;
+            // console.log(message.display)
+
+            // only print out REP's chat messages
+            if (message.role == 'rep') {
+                if (message.type == 'normal') {
+                    console_out(message.text);
+                    if (message.display) {
+                        //console.log(message.display)
+                        message.display.data.questions.forEach(function (value, index, array) {
+                            console_out(value.kind + ' GUI question: ' + value.heading);
+                            if (value.choices) {
+                                value.choices.forEach(function (c, i, a) {
+                                    console_out('[Choice] text: ' + c.text + '; value: ' + c.value);
+                                })
+                            }
+
+                        })
+                    }
+                    if (message.quickReply) {
+                        console.log("quickReply: ", message.quickReply)
+                        let line = userResp[userRespIx];
+                        if (line != undefined) {
+                            ws.send(util.format(chatFormat, chatInfo.participationId, line));
+                            console.log(`User response[${userRespIx}] ${line}`);
+                            userRespIx++;
+                        }
+                    }
+                    timeoutId = setTimeout(function () {
+                        let line = userResp[userRespIx];
+                        if (line != undefined) {
+                            ws.send(util.format(chatFormat, chatInfo.participationId, line));
+                            console.log(`User response[${userRespIx}] ${line}`);
+                            userRespIx++;
+                        }
+
+                    }, 10000);
+                } else if (message.type == 'user-joined') {
+                    console.log('');
+                    console.log(color.blue('=== Welcome to Juji Bot ==='));
+                    console.log('');
+                }
+            }
+
+        }
+    };
+
+}
+
+function main() {
+    userResp = loadChatscript();
+    userResp.forEach((r, i) => {
+        console.log(i, r);
+    })
+    startChat().catch(error => console.error(error))
+}
+
+main();

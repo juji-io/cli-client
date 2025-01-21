@@ -1,0 +1,22 @@
+[2024-10-31 18:28:31 (America/Los_Angeles)] Juji: <p>Hello,  Abby,&nbsp;I see you're interested in exploring our promotions to Europe!&nbsp;What destination do you have in mind?</p>
+[2024-10-31 18:28:33 (America/Los_Angeles)] Juji: <p>What destination do you have in mind?</p>
+[2024-10-31 18:28:50 (America/Los_Angeles)] Abby: I want to take a trip but don’t really know where to go.
+[2024-10-31 18:28:54 (America/Los_Angeles)] Juji: <p>No worries. I’d love to help you find the perfect destination. Can I ask you a few quick questions to get a better idea of what might suit you?</p>
+[2024-10-31 18:28:57 (America/Los_Angeles)] Abby: sure
+[2024-10-31 18:29:02 (America/Los_Angeles)] Juji: <p> <p>Great! To recommend a destination that's perfect for you, I'll need to ask a few quick questions to learn a little more about you.</p>
+[2024-10-31 18:29:02 (America/Los_Angeles)] Juji: <p>Let's get started.</p>
+[2024-10-31 18:29:02 (America/Los_Angeles)] Juji:  </p>
+[2024-10-31 18:29:03 (America/Los_Angeles)] Juji: <p>First, where are you currently located?</p>
+[2024-10-31 18:29:09 (America/Los_Angeles)] Abby: I’m in New York City.
+[2024-10-31 18:29:12 (America/Los_Angeles)] Juji: <p>We’ve got a special promotion running from JFK, so you're in the perfect spot for great deals. </p>
+[2024-10-31 18:29:14 (America/Los_Angeles)] Juji: <p>What do you do for work?</p>
+[2024-10-31 18:29:17 (America/Los_Angeles)] Abby: I’m an electrical engineer.
+[2024-10-31 18:29:20 (America/Los_Angeles)] Juji: That's great! Electrical engineering is a fascinating field with many opportunities, especially in a city like New York. [AI synthesized]
+[2024-10-31 18:29:22 (America/Los_Angeles)] Juji: <p>Now, how about outside of work—what are some of your favorite activities?</p>
+[2024-10-31 18:29:27 (America/Los_Angeles)] Abby: I love car rides, and I also enjoy hanging out with friends at bars after work.
+[2024-10-31 18:29:31 (America/Los_Angeles)] Juji: Car rides and socializing at bars sound fun! It's great to unwind and enjoy time with friends after work. [AI synthesized]
+[2024-10-31 18:29:32 (America/Los_Angeles)] Juji: <p>I think I have the perfect spot for you: <em>Munich, Germany!</em></p>
+[2024-10-31 18:29:32 (America/Los_Angeles)] Juji: <p><em>﻿</em>Here’s what you might love in Munich:</p>
+[2024-10-31 18:29:35 (America/Los_Angeles)] Juji: I'll just hang around a bit in case you want to chat more.
+[2024-10-31 18:49:53 (America/Los_Angeles)] Juji: <p>Hello,  Abby,&nbsp;I see you're interested in exploring our promotions to Europe!&nbsp;What destination do you have in mind?</p>
+[2024-10-31 18:49:55 (America/Los_Angeles)] Juji: <p>What destination do you have in mind?</p>

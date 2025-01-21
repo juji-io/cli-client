@@ -13,7 +13,7 @@ program
     .option('-l, --lastName [lastName]', 'last name')
     .option('-e, --email [email]', 'email address');
 
-program.on('--help', function(){
+program.on('--help', function () {
     console.log('')
     console.log('Example:');
     console.log('  juji chat -f Mary https://juji.ai/pre-chat/mycorp/3');
@@ -47,13 +47,13 @@ var ws;
 
 // https://github.com/mikeal/bent same author as deprecated request-promise
 const bent = require('bent'),
-      util = require('util'),
-      color = require("colors"),
-      readline = require('readline'),
-      rl = readline.createInterface({
-          input: process.stdin,
-          output: process.stdout
-      });
+    util = require('util'),
+    color = require("colors"),
+    readline = require('readline'),
+    rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
 
 function console_out(msg) {
     if (msg != null) {
@@ -76,11 +76,11 @@ const chatFormat = `
                     }
                 }
                 `;
-    rl.on('line', (line) => {
+rl.on('line', (line) => {
     ws.send(util.format(chatFormat, chatInfo.participationId, line));
 });
 
-    rl.on('SIGINT', () => {
+rl.on('SIGINT', () => {
     rl.question('Are you sure you want to exit? ', (answer) => {
         if (answer.match(/^y(es)?$/i)) {
             rl.close();
@@ -99,7 +99,7 @@ async function startChat() {
     var form = new FormData();
     form.append('firstName', program.firstName);
 
-    const postJSON = bent('POST', 'string', { 'Content-Type': 'multipart/form-data'});
+    const postJSON = bent('POST', 'string', { 'Content-Type': 'multipart/form-data' });
     //const postJSON = bent('POST', 'buffer', { 'Content-Type': 'multipart/form-data'});
 
     const response = await postJSON(url, form, form.getHeaders());
@@ -163,9 +163,10 @@ async function startChat() {
     ws.onmessage = function (incoming) {
 
         var data = JSON.parse(incoming.data);
+        console.log(data);
 
         // only deal with chat messages, ignore other message types
-        if ('data' in data && 'chat' in data.data)  {
+        if ('data' in data && 'chat' in data.data) {
 
             var message = data.data.chat;
             // console.log(message.display)
@@ -174,22 +175,22 @@ async function startChat() {
             if (message.role == 'rep') {
                 if (message.type == 'normal') {
                     console_out(message.text);
-                    if (message.display){
+                    if (message.display) {
                         console.log(message.display)
-                        message.display.data.questions.forEach(function (value, index, array){
+                        message.display.data.questions.forEach(function (value, index, array) {
                             console_out(value.kind + ' GUI question: ' + value.heading);
-                            if (value.choices){
-                                value.choices.forEach(function (c, i, a){
+                            if (value.choices) {
+                                value.choices.forEach(function (c, i, a) {
                                     console_out('[Choice] text: ' + c.text + '; value: ' + c.value);
                                 })
                             }
 
                         })
                     }
-                    if (message.quickReply){
+                    if (message.quickReply) {
                         console.log(message.quickReply)
                     }
-                } else if ( message.type == 'user-joined') {
+                } else if (message.type == 'user-joined') {
                     console.log('');
                     console.log(color.blue('=== Welcome to Juji Bot ==='));
                     console.log('');

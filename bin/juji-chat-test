@@ -46,8 +46,9 @@ if (!program.firstName) {
 var chatInfo;
 var ws;
 var timeoutId;
-var userResp;
+var userResp, chatText;
 var userRespIx = 0;
+var startTime = Date.now();
 
 // https://github.com/mikeal/bent same author as deprecated request-promise
 const bent = require('bent'),
@@ -95,22 +96,44 @@ rl.on('SIGINT', () => {
 
 function loadChatscript() {
     var resp = Array();
+    var chitchat = Array();
     try {
         const buf = require('fs').readFileSync(fn, 'utf8');
         var lines = buf.split("\n");
         console.log("nlines", lines.length);
+        var achitchat = "";
         lines.forEach((line, i) => {
             // console.log(i, ": ", line);
             if (i == 0) {
+                // Extract chatbot's name from the first transcript line
                 let foo = line.match(/] (.*): /);
                 chatbot_name = foo[1];
                 console.log("chatbot_name", chatbot_name);
+                // Split out chatbot text
+                foo = line.split(/] .*: /, 3);
+                console.log("foo=", foo);
+                achitchat = foo[1];
             } else {
-                let pos = line.indexOf(chatbot_name); // look for chatbot prompt
+                // parse chatbot responses
+                let pos = line.indexOf(chatbot_name);
 
-                var res = `*** ${pos} ${line}`;
+                if (pos > 0) {
+                    let tokens = line.split(/] .*: /, 3);
+                    achitchat = achitchat + "\n" + tokens[1];
+                }
+                // parse user response
+                // pos = line.indexOf(chatbot_name); // look for chatbot prompt
+
+                //var res = `*** ${pos} ${line}`;
                 //console.log(line);
-                if (pos == -1 && line.length > 0) {
+                // if (pos == -1 && line.length > 0) {
+                else {
+
+                    // save the concatenated chatbot texts
+                    chitchat.push(achitchat);
+                    achitchat = "";
+
+                    // parse user response
                     let ress = line.split(/] .*: /, 3);
                     let foo = line.match(/] (.*): /); // extract user name
                     let bar = line.match(/:text "(.*)"/); // if exist, extract :text value [{:type "Action", :gid "question_30", :question "question_30", :value 0, :text "Economy"}]
@@ -132,7 +155,7 @@ function loadChatscript() {
 
         })
 
-        return resp;
+        return [chitchat, resp];
 
     } catch (err) {
         console.error(err);
@@ -144,7 +167,7 @@ async function startChat() {
     //
     // step 1: obtain chat information
     //
-
+    startTime = Date.now();
     var FormData = require('form-data');
     var form = new FormData();
     form.append('firstName', program.firstName);
@@ -180,6 +203,7 @@ async function startChat() {
                 role
                 text
                 type
+                endOfMessage
                 display{
                     type
                     data{
@@ -207,26 +231,66 @@ async function startChat() {
         ws.send(util.format(subFormat, chatInfo.participationId));
     };
 
+    let chattext;
+
     //
     // step 4: receive chat messages
     //
     ws.onmessage = function (incoming) {
 
         var data = JSON.parse(incoming.data);
-        //console.log("data: ", data);
+        //console.log(data);
 
         // only deal with chat messages, ignore other message types
         if ('data' in data && 'chat' in data.data) {
-            // clear timeout
-            clearTimeout(timeoutId);
+            // clear the timeout to restart the clock again
+
 
             var message = data.data.chat;
             // console.log(message.display)
 
             // only print out REP's chat messages
             if (message.role == 'rep') {
-                if (message.type == 'normal') {
+                console.log("Clear Timeout...");
+                clearTimeout(timeoutId);
+                //console.log("Clear timeoutId:", timeoutId);
+
+                // {
+                //     data: {
+                //         chat: {
+                //             role: 'rep',
+                //             text: null,
+                //             type: 'flowinfo',
+                //             endOfMessage: true,
+                //             display: null,
+                //             quickReply: null
+                //         }
+                //     }
+                // }
+                if (message.type == 'flowinfo') {
+                    if (message.endOfMessage) {
+                        let end = Date.now();
+                        console.log("endOfMessage: true");
+                        let elapsedTime = end - startTime;
+                        console.log("ElapsedTime=", elapsedTime);
+                        console.log("GOT", chattext);
+                        chattext = "";
+                        console.log("EXPECT", chatText[userRespIx], "\n------------");
+                        let line = userResp[userRespIx];
+                        if (line != undefined) {
+                            ws.send(util.format(chatFormat, chatInfo.participationId, line));
+                            console.log(`User response[${userRespIx}] ${line}`);
+                            userRespIx++;
+                        }
+                        startTime = Date.now();
+                    }
+                } else if (message.type == 'normal') {
+
                     console_out(message.text);
+                    if (message.text != null && message.text.length > 0) {
+                        chattext = chattext + "\n" + message.text;
+                    }
+
                     if (message.display) {
                         //console.log(message.display)
                         message.display.data.questions.forEach(function (value, index, array) {
@@ -248,13 +312,21 @@ async function startChat() {
                             userRespIx++;
                         }
                     }
+                    console.log("SetTimeOut()...");
                     timeoutId = setTimeout(function () {
+                        let end = Date.now();
+                        console.log("***TIMEOUT*** 10 seconds GOT", chattext);
+                        chattext = "";
+                        console.log("EXPECT", chatText[userRespIx], "\n------------");
                         let line = userResp[userRespIx];
                         if (line != undefined) {
                             ws.send(util.format(chatFormat, chatInfo.participationId, line));
                             console.log(`User response[${userRespIx}] ${line}`);
                             userRespIx++;
                         }
+                        let elapsedTime = end - startTime;
+                        console.log("Timeout elapsed time=", elapsedTime);
+                        startTime = Date.now();
 
                     }, 10000);
                 } else if (message.type == 'user-joined') {
@@ -270,7 +342,10 @@ async function startChat() {
 }
 
 function main() {
-    userResp = loadChatscript();
+    [chatText, userResp] = loadChatscript();
+    chatText.forEach((r, i) => {
+        console.log(i, r);
+    })
     userResp.forEach((r, i) => {
         console.log(i, r);
     })

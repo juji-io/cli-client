@@ -1,0 +1,81 @@
+#!/usr/bin/env node
+
+/*
+ * parse command line argument
+ */
+
+var program = require('commander');
+program.parse(process.argv);
+
+var args = program.args;
+
+if (!args.length) {
+  console.error('filename is required');
+  program.outputHelp();
+  process.exit(1);
+}
+
+const arg_0 = args[0];
+//const arg_1 = args[1];
+const fn = args[1];
+
+const chatbot_name = ` ${arg_0}: `;
+var user_name;
+
+const fs = require('fs');
+const readline = require('readline');
+
+const rl = readline.createInterface({
+  input: fs.createReadStream(fn),
+  crlfDelay: Infinity
+});
+
+var timeoutId = 0;
+
+function foo() {
+  console.log("foo", timeoutId)
+}
+//function sleep(ms) {
+//  return new Promise((resolve) => setTimeout(resolve, ms));
+//}
+
+//const sleep = ms => new Promise(r => setTimeout(r, ms, "Done sleeping"));
+const sleep = time => new Promise(res => setTimeout(res, time, "done sleeping"));
+
+var i;
+rl.on('line', (line) => {
+  let pos = line.indexOf(chatbot_name); // look for chatbot prompt
+
+  var res = `***${line}`;
+  if (pos > -1) {
+    //clearTimeout(timeoutId);
+    let ress = line.split(chatbot_name, 2);
+    res = `${arg_0}: ${ress[1]}`;
+    //timeoutId = setTimeout(foo, 1000);
+    return;
+
+  } else {
+    //console.log("Before sleep 2000")
+    //await sleep(3000);
+    //(async () => await new Promise(resolve => setTimeout(resolve, 2000)))();
+    // using async/await in top level
+    //sleep(2000).then(msg => console.log(msg));
+    // Sleep for 3 seconds
+    let ms = 2000;
+    //Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+    //console.log("After  sleep")
+    let ress = line.split(/] .*: /, 3);
+    let foo = line.match(/] (.*): /);
+    console.log("--- res", ress);
+    console.log("=== foo", foo);
+    user_name = foo[1];
+    lines[i] = ress[1];
+    i++;
+    if (ress.length > 0) {
+      res = `${user_name}: ${ress[1]}`;
+    }
+  }
+  console.log(res);
+});
+
+

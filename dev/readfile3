@@ -1,0 +1,37 @@
+#!/usr/bin/env node
+
+/*
+ * parse command line argument
+ */
+
+var program = require('commander');
+program.parse(process.argv);
+
+var args = program.args;
+
+const arg_0 = args[0];
+//const arg_1 = args[1];
+const fn = args[1];
+
+const chatbot_name = ` ${arg_0}: `;
+var user_name;
+var lines;
+
+
+var dicWords = []
+async function ReadFile() {
+    var fs = require('fs').promises
+    let data = await fs.readFile(fn)
+    data = String(data)
+    dicWords = data.split(/\r?\n/);
+}
+function DoStuffWithFile() {
+    //do stuff with the variable dicWords
+    console.log("Done");
+}
+async function main() {
+    await ReadFile();
+    DoStuffWithFile();
+}
+
+main();

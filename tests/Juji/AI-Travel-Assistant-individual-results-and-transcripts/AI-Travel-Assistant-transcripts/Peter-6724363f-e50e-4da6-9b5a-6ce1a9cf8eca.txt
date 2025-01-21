@@ -1,0 +1,29 @@
+[2024-10-31 19:00:32 (America/Los_Angeles)] Juji: <p>Hello,  Peter,&nbsp;I see you're interested in exploring our promotions to Europe!&nbsp;What destination do you have in mind?</p>
+[2024-10-31 19:00:34 (America/Los_Angeles)] Juji: <p>What destination do you have in mind?</p>
+[2024-10-31 19:00:48 (America/Los_Angeles)] Peter: I've never been to Europe. I want to take a trip but don’t really know where to go.
+[2024-10-31 19:00:58 (America/Los_Angeles)] Juji: <p>No worries. I’d love to help you find the perfect destination. Can I ask you a few quick questions to get a better idea of what might suit you?</p>
+[2024-10-31 19:01:01 (America/Los_Angeles)] Peter: sure
+[2024-10-31 19:01:05 (America/Los_Angeles)] Juji: <p> <p>Great! To recommend a destination that's perfect for you, I'll need to ask a few quick questions to learn a little more about you.</p>
+[2024-10-31 19:01:05 (America/Los_Angeles)] Juji: <p>Let's get started.</p>
+[2024-10-31 19:01:05 (America/Los_Angeles)] Juji:  </p>
+[2024-10-31 19:01:06 (America/Los_Angeles)] Juji: <p>First, where are you currently located?</p>
+[2024-10-31 19:01:13 (America/Los_Angeles)] Peter: I’m in New York City.
+[2024-10-31 19:01:15 (America/Los_Angeles)] Juji: <p>We’ve got a special promotion running from JFK, so you're in the perfect spot for great deals. </p>
+[2024-10-31 19:01:16 (America/Los_Angeles)] Juji: <p>What do you do for work?</p>
+[2024-10-31 19:01:21 (America/Los_Angeles)] Peter: I’m an electrical engineer.
+[2024-10-31 19:01:26 (America/Los_Angeles)] Juji: That's great! Electrical engineering is a fascinating field with many opportunities, especially in a city like New York. [AI synthesized]
+[2024-10-31 19:01:27 (America/Los_Angeles)] Juji: <p>Now, how about outside of work—what are some of your favorite activities?</p>
+[2024-10-31 19:01:30 (America/Los_Angeles)] Peter: I love taking walks in parks, and I also enjoy hanging out with friends at bars after work.
+[2024-10-31 19:01:34 (America/Los_Angeles)] Juji: That sounds like a great way to unwind and enjoy the city life after a busy day at work. [AI synthesized]
+[2024-10-31 19:01:38 (America/Los_Angeles)] Juji: <p>I think I have the perfect spot for you: <em>Munich, Germany!</em></p>
+[2024-10-31 19:01:38 (America/Los_Angeles)] Juji: <p><em>﻿</em>Here’s what you might love in Munich:</p>
+[2024-10-31 19:01:38 (America/Los_Angeles)] Juji: <p> 1. Explore the English Garden: As someone who enjoys taking walks in parks, you might love the English Garden in Munich. It's one of the largest urban parks in the world, offering beautiful landscapes and serene walking paths. It's a perfect spot to relax and enjoy nature.
+[2024-10-31 19:01:38 (America/Los_Angeles)] Juji: 2. Visit the Deutsches Museum: Given your background in electrical engineering, you might find the Deutsches Museum fascinating. It's one of the world's largest museums dedicated to science and technology, with exhibits that cover a wide range of engineering topics.
+[2024-10-31 19:01:38 (America/Los_Angeles)] Juji: 3. Experience the beer gardens: Since you enjoy hanging out with friends at bars, you might want to visit Munich's famous beer gardens. They offer a lively atmosphere where you can enjoy traditional Bavarian beer and food while socializing with locals and fellow travelers. [AI synthesized] </p>
+[2024-10-31 19:01:40 (America/Los_Angeles)] Juji: <p>We currently have a special promotion from  New York City to Munich. Would you like to learn more about the deal and get started with planning?</p>
+[2024-11-01 16:44:22 (America/Los_Angeles)] Sky: <p>Hello,  Peter! Thank you for your interest in our holiday Europe flight deals!&nbsp;</p>
+[2024-11-01 16:44:24 (America/Los_Angeles)] Sky: <p>What destination do you have in mind?</p>
+[2024-11-03 06:48:25 (America/Los_Angeles)] Sky: <p>Hello,  Peter! Thank you for your interest in our holiday Europe flight deals!&nbsp;</p>
+[2024-11-03 06:48:26 (America/Los_Angeles)] Sky: <p>What destination do you have in mind?</p>
+[2024-11-05 09:18:17 (America/Los_Angeles)] Sky: <p>Hello,  Peter! Thank you for your interest in Delta's holiday Europe flight deals!&nbsp;</p>
+[2024-11-05 09:18:19 (America/Los_Angeles)] Sky: <p>With 250+ weekly flights to Europe, Delta offers numerous flight options for your next European adventure. What European destination are you considering to travel to?</p>

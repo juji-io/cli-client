@@ -1,0 +1,20 @@
+[2024-10-31 18:54:36 (America/Los_Angeles)] Juji: <p>Hello,  Jack,&nbsp;I see you're interested in exploring our promotions to Europe!&nbsp;What destination do you have in mind?</p>
+[2024-10-31 18:54:38 (America/Los_Angeles)] Juji: <p>What destination do you have in mind?</p>
+[2024-10-31 18:54:57 (America/Los_Angeles)] Jack: I've never been to Europe. I want to take a trip but don’t really know where to go.
+[2024-10-31 18:55:01 (America/Los_Angeles)] Juji: <p>No worries. I’d love to help you find the perfect destination. Can I ask you a few quick questions to get a better idea of what might suit you?</p>
+[2024-10-31 18:55:06 (America/Los_Angeles)] Jack: sure
+[2024-10-31 18:55:10 (America/Los_Angeles)] Juji: <p> <p>Great! To recommend a destination that's perfect for you, I'll need to ask a few quick questions to learn a little more about you.</p>
+[2024-10-31 18:55:10 (America/Los_Angeles)] Juji: <p>Let's get started.</p>
+[2024-10-31 18:55:10 (America/Los_Angeles)] Juji:  </p>
+[2024-10-31 18:55:10 (America/Los_Angeles)] Juji: <p>First, where are you currently located?</p>
+[2024-10-31 18:55:13 (America/Los_Angeles)] Jack: I’m in New York City.
+[2024-10-31 18:55:17 (America/Los_Angeles)] Juji: <p>We’ve got a special promotion running from JFK, so you're in the perfect spot for great deals. </p>
+[2024-10-31 18:55:18 (America/Los_Angeles)] Juji: <p>What do you do for work?</p>
+[2024-10-31 18:55:22 (America/Los_Angeles)] Jack: I’m an electrical engineer.
+[2024-10-31 18:55:25 (America/Los_Angeles)] Juji: That's great! Electrical engineering is such a vital field, especially in a bustling city like New York. [AI synthesized]
+[2024-10-31 18:55:26 (America/Los_Angeles)] Juji: <p>Now, how about outside of work—what are some of your favorite activities?</p>
+[2024-10-31 18:55:36 (America/Los_Angeles)] Jack: I love taking walks in parks, and I also enjoy hanging out with friends at bars after work.
+[2024-10-31 18:55:40 (America/Los_Angeles)] Juji: That sounds like a perfect balance of relaxation and socializing. Enjoying nature and good company is always refreshing! [AI synthesized]
+[2024-10-31 18:55:41 (America/Los_Angeles)] Juji: <p>I think I have the perfect spot for you: <em>Munich, Germany!</em></p>
+[2024-10-31 18:55:41 (America/Los_Angeles)] Juji: <p><em>﻿</em>Here’s what you might love in Munich:</p>
+[2024-10-31 18:55:43 (America/Los_Angeles)] Juji: <p>We currently have a special promotion from  New York City to Munich. Would you like to learn more about the deal and get started with planning?</p>

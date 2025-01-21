@@ -1,0 +1,9 @@
+[2024-11-07 21:05:59 (America/Los_Angeles)] Sky: <p>Hello,  Emma! Thank you for your interest in Delta's holiday Europe flight deals!&nbsp;</p>
+[2024-11-07 21:06:01 (America/Los_Angeles)] Sky: <p>With 250+ weekly flights to Europe, Delta offers numerous flight options for your next European adventure! Have you made up your mind as where to go? 🥰 If you have, <a href="https://juji.ai/outbound-link?value=https%3A%2F%2Fwww.delta.com%2F&name=follow%20this%20link&pid=672d9c36-fd74-4126-bdde-bbf7990e5b90" target="_blank" type="https://www.delta.com" rel="noopener noreferrer" id="iee054e67-2143-afef-f396-f2f1d66204ee">follow this link</a> to make a flight reservation.</p>
+[2024-11-07 21:06:01 (America/Los_Angeles)] Sky: <p>If you haven't made up your mind yet, I'd be happy to help you find a destination or explore activities at a destination. I'm just a text away!</p> [{:type :reply, :options ["Find me a destination" "Find me activities in a city" "I don't have any questions"]}]
+[2024-11-07 21:06:23 (America/Los_Angeles)] Emma: Find me a destination
+[2024-11-07 21:06:27 (America/Los_Angeles)] Sky: <p>Great! Let's get started to find you a perfect European destination.</p>
+[2024-11-07 21:06:28 (America/Los_Angeles)] Sky: <p>Could you say a bit about yourself? For example, the type of work you do. </p>
+[2024-11-07 21:06:37 (America/Los_Angeles)] Emma: I am a social media marketing specialist - currently I work for Sephora, in charge of their Facebook marketing
+[2024-11-07 21:06:43 (America/Los_Angeles)] Sky: You must be good with people.
+[2024-11-07 21:06:45 (America/Los_Angeles)] Sky: <p> What are some of your favorite activities or hobbies outside of work, Emma? [AI synthesized] </p>

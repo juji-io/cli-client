@@ -1,0 +1,4 @@
+[2024-10-31 21:26:51 (America/Los_Angeles)] Sky: <p>Hello,  Emma! Thank you for your interest in our holiday Europe flight deals!&nbsp;</p>
+[2024-10-31 21:26:53 (America/Los_Angeles)] Sky: <p>What destination do you have in mind?</p>
+[2024-10-31 21:29:03 (America/Los_Angeles)] Emma: I don't have a destination in mind yet, I'm browsing
+[2024-10-31 21:29:08 (America/Los_Angeles)] Sky: <p>No worries, I'm here to assist you in finding the perfect destination! This will be a breeze: I'll just ask you a few quick questions and then provide some suggestions. Want to give it a try?</p>

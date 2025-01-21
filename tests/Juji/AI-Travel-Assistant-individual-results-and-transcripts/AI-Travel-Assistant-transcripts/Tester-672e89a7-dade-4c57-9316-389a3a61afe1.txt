@@ -1,0 +1,50 @@
+[2024-11-08 13:59:06 (America/Los_Angeles)] Sky: <p>Hello,  Tester! Thank you for your interest in Delta's holiday Europe flight deals!&nbsp;</p>
+[2024-11-08 13:59:08 (America/Los_Angeles)] Sky: <p>With 250+ weekly flights to Europe, Delta offers numerous flight options for your next European adventure! Have you made up your mind as where to go? 🥰 If you have, <a href="https://juji.ai/outbound-link?value=https%3A%2F%2Fwww.delta.com%2F&name=follow%20this%20link&pid=672e89a7-dade-4c57-9316-389a3a61afe1" target="_blank" type="https://www.delta.com" rel="noopener noreferrer" id="iee054e67-2143-afef-f396-f2f1d66204ee">follow this link</a> to make a flight reservation.</p>
+[2024-11-08 13:59:08 (America/Los_Angeles)] Sky: <p>If you haven't made up your mind yet, I'd be happy to help you find a destination or explore activities at a destination. I'm just a text away!</p> [{:type :reply, :options ["Find me a destination" "Find me activities in a city" "I don't have any questions"]}]
+[2024-11-08 13:59:27 (America/Los_Angeles)] Tester: What if I want to go to Asia?
+[2024-11-08 13:59:34 (America/Los_Angeles)] Sky: Delta's current promotion focuses on Europe flights. For Asia, please check Delta's website for other available options. [AI synthesized]
+[2024-11-08 13:59:35 (America/Los_Angeles)] Sky: <p>If you still haven't made up your mind as where to visit, let me know what else I could help with. I just want you to take full advantage of this promotion 😄</p> [{:type :reply, :options ["Find me a destination" "Find me activities in a city" "I don't have any questions"]}]
+[2024-11-08 14:00:18 (America/Los_Angeles)] Tester: Do you have flights to Vladivostok?
+[2024-11-08 14:00:23 (America/Los_Angeles)] Sky: Delta's current promotion is for Europe. Please check Delta's website for flights to Vladivostok. [AI synthesized]
+[2024-11-08 14:00:25 (America/Los_Angeles)] Sky: <p>If you still haven't made up your mind as where to visit, let me know what else I could help with. I just want you to take full advantage of this promotion 😄</p> [{:type :reply, :options ["Find me a destination" "Find me activities in a city" "I don't have any questions"]}]
+[2024-11-08 14:00:37 (America/Los_Angeles)] Tester: Do you have flights to Vladivostok in Russia?
+[2024-11-08 14:00:43 (America/Los_Angeles)] Sky: Delta's current promotion is for Europe. Please check Delta's website for flights to Vladivostok, Russia. [AI synthesized]
+[2024-11-08 14:00:45 (America/Los_Angeles)] Sky: <p>Have you decided where to visit? If not, I'd be happy to help! Just let me know how I can assist so you don't miss out on our fantastic travel deals!</p> [{:type :reply, :options ["Find me a destination" "Find me activities in a city" "I don't have any questions"]}]
+[2024-11-08 14:00:56 (America/Los_Angeles)] Tester: Do you have flights to Russia?
+[2024-11-08 14:01:02 (America/Los_Angeles)] Sky: Delta's current promotion focuses on Europe. Please check Delta's website for flights to Russia. [AI synthesized]
+[2024-11-08 14:01:04 (America/Los_Angeles)] Sky: <p>Have you decided where to visit? If not, I'd be happy to help! Just let me know how I can assist so you don't miss out on our fantastic travel deals!</p> [{:type :reply, :options ["Find me a destination" "Find me activities in a city" "I don't have any questions"]}]
+[2024-11-08 14:01:21 (America/Los_Angeles)] Tester: Do you have flights to Moscow?
+[2024-11-08 14:01:27 (America/Los_Angeles)] Sky: Delta's current promotion focuses on Europe. Please check Delta's website for flights to Moscow. [AI synthesized]
+[2024-11-08 14:01:30 (America/Los_Angeles)] Sky: <p>Have you decided where to visit? If not, I'd be happy to help! Just let me know how I can assist so you don't miss out on our fantastic travel deals!</p> [{:type :reply, :options ["Find me a destination" "Find me activities in a city" "I don't have any questions"]}]
+[2024-11-08 14:19:12 (America/Los_Angeles)] Tester: I was thinking about visiting Turkey
+[2024-11-08 14:19:19 (America/Los_Angeles)] Sky: Turkey is a fantastic choice! Enjoy exploring its rich history, stunning landscapes, and vibrant culture with our Europe flight deals. [AI synthesized]
+[2024-11-08 14:19:22 (America/Los_Angeles)] Sky: <p>Do you know where you’d like to go? If not, let me know how I can help you explore options so you don’t miss out on our best travel deals of the season!</p> [{:type :reply, :options ["Find me a destination" "Find me activities in a city" "I don't have any questions"]}]
+[2024-11-08 14:19:40 (America/Los_Angeles)] Tester: Do you have any flights to Turikye?
+[2024-11-08 14:19:45 (America/Los_Angeles)] Sky: Yes, Delta Airlines offers flights to Türkiye with our Europe flight deals for November 2024 to January 2025. [AI synthesized]
+[2024-11-08 14:19:46 (America/Los_Angeles)] Sky: <p>If you still haven't made up your mind as where to visit, let me know what else I could help with. I just want you to take full advantage of this promotion 😄</p> [{:type :reply, :options ["Find me a destination" "Find me activities in a city" "I don't have any questions"]}]
+[2024-11-08 14:20:19 (America/Los_Angeles)] Tester: Is Russia in Europe?
+[2024-11-08 14:20:25 (America/Los_Angeles)] Sky: Russia is partly in Europe and partly in Asia, with Moscow located in the European part. [AI synthesized]
+[2024-11-08 14:20:27 (America/Los_Angeles)] Sky: <p>Have you decided where to visit? If not, I'd be happy to help! Just let me know how I can assist so you don't miss out on our fantastic travel deals!</p> [{:type :reply, :options ["Find me a destination" "Find me activities in a city" "I don't have any questions"]}]
+[2024-11-08 14:20:33 (America/Los_Angeles)] Tester: Can I get flights there?
+[2024-11-08 14:20:38 (America/Los_Angeles)] Sky: Currently, Delta's Europe deals do not include flights to Russia. Consider other European destinations for your travel plans. [AI synthesized]
+[2024-11-08 14:20:40 (America/Los_Angeles)] Sky: <p>Do you know where you’d like to go? If not, let me know how I can help you explore options so you don’t miss out on our best travel deals of the season!</p> [{:type :reply, :options ["Find me a destination" "Find me activities in a city" "I don't have any questions"]}]
+[2024-11-08 14:21:12 (America/Los_Angeles)] Tester: Can I get a flight to Georgia?
+[2024-11-08 14:21:19 (America/Los_Angeles)] Sky: Delta's Europe deals include flights to Tbilisi, Georgia. Enjoy exploring this beautiful destination with our special offers. [AI synthesized]
+[2024-11-08 14:21:20 (America/Los_Angeles)] Sky: <p>Have you decided where to visit? If not, I'd be happy to help! Just let me know how I can assist so you don't miss out on our fantastic travel deals!</p> [{:type :reply, :options ["Find me a destination" "Find me activities in a city" "I don't have any questions"]}]
+[2024-11-08 14:21:38 (America/Los_Angeles)] Tester: Is Georgia in the Americas or in Asia?
+[2024-11-08 14:21:43 (America/Los_Angeles)] Sky: Georgia is located at the intersection of Europe and Asia, often considered part of Eastern Europe. [AI synthesized]
+[2024-11-08 14:21:45 (America/Los_Angeles)] Sky: <p>Have you decided where to visit? If not, I'd be happy to help! Just let me know how I can assist so you don't miss out on our fantastic travel deals!</p> [{:type :reply, :options ["Find me a destination" "Find me activities in a city" "I don't have any questions"]}]
+[2024-11-08 14:23:51 (America/Los_Angeles)] Tester: Do you have flights to Konigsberg?
+[2024-11-08 14:23:56 (America/Los_Angeles)] Sky: Königsberg is now Kaliningrad, Russia. Delta Airlines does not currently offer flights to Kaliningrad. [AI synthesized]
+[2024-11-08 14:23:59 (America/Los_Angeles)] Sky: <p>If you still haven't made up your mind as where to visit, let me know what else I could help with. I just want you to take full advantage of this promotion 😄</p> [{:type :reply, :options ["Find me a destination" "Find me activities in a city" "I don't have any questions"]}]
+[2024-11-08 14:24:14 (America/Los_Angeles)] Tester: I'd like to visit Kyiv
+[2024-11-08 14:24:16 (America/Los_Angeles)] Sky: <p>  <p>I'd love to suggest some activities in the city of your interest.</p>
+[2024-11-08 14:24:16 (America/Los_Angeles)] Sky:  </p>
+[2024-11-08 14:24:18 (America/Los_Angeles)] Sky: <p> Our holiday Europe flight deals are available for travel throughout November 2024, December 2024, and January 2025. Which month are you thinking of traveling? [AI synthesized] </p>
+[2024-11-08 14:24:31 (America/Los_Angeles)] Tester: Do you have flights to Kyiv?
+[2024-11-08 14:24:35 (America/Los_Angeles)] Sky: Currently, Delta Airlines does not offer direct flights to Kyiv. Consider nearby European destinations for your travel plans. [AI synthesized]
+[2024-11-08 14:24:36 (America/Los_Angeles)] Sky: Alright, let me repeat what I was asking...
+[2024-11-08 14:24:36 (America/Los_Angeles)] Sky: <p>When are you considering traveling?</p>
+[2024-11-08 17:00:59 (America/Los_Angeles)] Sky: <p>Hello,  Tester! Thank you for your interest in Delta's holiday Europe flight deals!&nbsp;</p>
+[2024-11-08 17:01:01 (America/Los_Angeles)] Sky: <p>With 250+ weekly flights to Europe, Delta offers numerous flight options for your next European adventure! Have you made up your mind as where to go? 🥰 If you have, <a href="https://juji.ai/outbound-link?value=https%3A%2F%2Fwww.delta.com%2F&name=follow%20this%20link&pid=672e89a7-dade-4c57-9316-389a3a61afe1" target="_blank" type="https://www.delta.com" rel="noopener noreferrer" id="iee054e67-2143-afef-f396-f2f1d66204ee">follow this link</a> to make a flight reservation.</p>
+[2024-11-08 17:01:01 (America/Los_Angeles)] Sky: <p>If you haven't made up your mind yet, I'd be happy to help you find a destination or explore activities at a destination. I'm just a text away!</p> [{:type :reply, :options ["Find me a destination" "Find me activities in a city" "I don't have any questions"]}]

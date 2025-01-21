@@ -1,0 +1,10 @@
+[2024-11-05 13:09:29 (America/Los_Angeles)] Sky: <p>Hello,  Tester! Thank you for your interest in Delta's holiday Europe flight deals!&nbsp;</p>
+[2024-11-05 13:09:31 (America/Los_Angeles)] Sky: <p>With 250+ weekly flights to Europe, Delta offers numerous flight options for your next European adventure. What European destination are you considering to travel to?</p>
+[2024-11-05 15:06:53 (America/Los_Angeles)] Sky: <p>Hello,  Tester! Thank you for your interest in Delta's holiday Europe flight deals!&nbsp;</p>
+[2024-11-05 15:06:55 (America/Los_Angeles)] Sky: <p>With 250+ weekly flights to Europe, Delta offers numerous flight options for your next European adventure. What European destination are you considering to travel to?</p>
+[2024-11-05 16:02:16 (America/Los_Angeles)] Sky: <p>Hello,  Tester! Thank you for your interest in Delta's holiday Europe flight deals!&nbsp;</p>
+[2024-11-05 16:02:18 (America/Los_Angeles)] Sky: <p>With 250+ weekly flights to Europe, Delta offers numerous flight options for your next European adventure. What European destination are you considering to travel to?</p>
+[2024-11-05 16:51:24 (America/Los_Angeles)] Sky: <p>Hello,  Tester! Thank you for your interest in Delta's holiday Europe flight deals!&nbsp;</p>
+[2024-11-05 16:51:26 (America/Los_Angeles)] Sky: <p>With 250+ weekly flights to Europe, Delta offers numerous flight options for your next European adventure. What European destination are you considering to travel to?</p>
+[2024-11-05 17:01:26 (America/Los_Angeles)] Sky: <p>Hello,  Tester! Thank you for your interest in Delta's holiday Europe flight deals!&nbsp;</p>
+[2024-11-05 17:01:28 (America/Los_Angeles)] Sky: <p>With 250+ weekly flights to Europe, Delta offers numerous flight options for your next European adventure. What European destination are you considering to travel to?</p>

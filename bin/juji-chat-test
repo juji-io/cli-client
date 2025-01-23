@@ -143,7 +143,7 @@ function loadChatscript() {
                 foo = line.split(/] .*: /, 3);
                 console.log("foo=", foo);
                 achitchat = foo[1];
-            } else {
+            } else if (line.length > 0) {
                 // parse chatbot responses
                 let pos = line.indexOf(chatbot_name);
 
@@ -170,9 +170,9 @@ function loadChatscript() {
                     if (bar != undefined) {
                         ress[1] = bar[1].trim();
                     }
-                    //console.log("bar ", bar)
-                    //console.log("--- res", ress);
-                    //console.log("=== foo", foo);
+                    console.log("bar ", bar)
+                    console.log("--- res", ress);
+                    console.log("=== foo", foo);
                     user_name = foo[1];
 
                     let res;
@@ -286,7 +286,11 @@ async function compare_intent(context1, para1, para2) {
     if (resultstr == "1") { // not equivalent
         rc = 1;
     }
-    console.log("rc=", rc);
+    let testResult = "PASS";
+    if (rc == 1) {
+        testResult = "FAILED";
+    }
+    console.log("[AI synthesized] intention comparison:", testResult);
     if (rc > 0) {
         sumRc = rc;
     }
@@ -444,6 +448,9 @@ async function startChat() {
                             console.log("Nothing to compare @", userRespIx);
                         }
                         userRespIx = ix;
+                        if (ix >= userResp.length) {
+                            process.exit(sumRc);  // exit after ran out userResp
+                        }
 
                     }
                 } else if (message.type == 'normal') {
@@ -511,12 +518,14 @@ async function startChat() {
 
 function main() {
     [chatText, userResp] = loadChatscript();
-    chatText.forEach((r, i) => {
-        console.log(i, r);
-    })
-    userResp.forEach((r, i) => {
-        console.log(i, r);
-    })
+    if (debug) {
+        chatText.forEach((r, i) => {
+            console.log(i, r);
+        })
+        userResp.forEach((r, i) => {
+            console.log(i, r);
+        })
+    }
     startChat().catch(error => console.error(error))
 }
 

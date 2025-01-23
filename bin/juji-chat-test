@@ -1,14 +1,30 @@
 #!/usr/bin/env node
 
+import dotenv from 'dotenv';
+dotenv.config(); // load OPENAI_API_KEY from .env file
+//import punycode from 'punycode';
+
+import { request } from "http";
+import OpenAI from "openai";
+import { text } from "stream/consumers";
+//require('dotenv').config();
+
+
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+});
+
 /*
  * parse command line argument
  */
+import { Command } from 'commander';
 
-var program = require('commander');
+const program = new Command();
+//var program = require('commander');
 
 program
     .description('Chat with a Juji bot. Does not require login.')
-    .arguments('<url>')
+    .arguments('<url> <chatscript file>')
     .option('-f, --firstName <firstName>', 'first name', 'Guest')
     .option('-l, --lastName [lastName]', 'last name')
     .option('-e, --email [email]', 'email address');
@@ -50,9 +66,13 @@ var userResp, chatText;
 var userRespIx = 0;
 var startTime = Date.now();
 
+import pkg from 'bent';
+const { Bent } = pkg;
+
+const bent = new Bent();
 // https://github.com/mikeal/bent same author as deprecated request-promise
-const bent = require('bent'),
-    util = require('util'),
+// const bent = require('bent'),
+const util = require('util'),
     color = require("colors"),
     readline = require('readline'),
     rl = readline.createInterface({
@@ -94,6 +114,9 @@ rl.on('SIGINT', () => {
     });
 });
 
+//
+//
+//
 function loadChatscript() {
     var resp = Array();
     var chitchat = Array();
@@ -161,6 +184,100 @@ function loadChatscript() {
         console.error(err);
     }
 }
+
+
+const system_prompt = "You are given a Context paragraph and two AI response paragraphs. If the two response paragraph express the same intent, then return a 0, otherwise a 1";
+const user_prompt = "[Context] $CONTEXT\n\n[Response 1] $P1\n\n[Response 2] $P2";
+let context = "My parents came to the U.S, 30 years ago and attended colleges here. They met and got married. My grandma owns a Chinese restaurant and my parents went into this family business. I am the middle child of three children. I have an older brother who is a senior at Princeton University, and a younger brother who is in middle school.";
+let p1 = "Your family sounds accomplished and close-knit, with a strong entrepreneurial spirit. It's great to hear about your brothers' achievements too.";
+let p2 = "Your family's journey and achievements are impressive. It sounds like a supportive and ambitious environment to grow up in.";
+
+var request_messages_template = {
+    model: "gpt-4o",
+    messages: [
+        {
+            "role": "system",
+            "content": [
+                {
+                    "type": "text",
+                    "text": system_prompt
+                }
+            ]
+        },
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": ""
+                }
+            ]
+        }
+    ],
+    response_format: {
+        "type": "text"
+    },
+    temperature: 1,
+    max_completion_tokens: 2048,
+    top_p: 1,
+    frequency_penalty: 0,
+    presence_penalty: 0
+}
+
+//
+//
+//
+async function compare_intent(context1, para1, para2) {
+
+    let request_messages = structuredClone(request_messages_template);
+
+    let text1 = user_prompt;
+    text1 = text1.replace("$CONTEXT", context1);
+    text1 = text1.replace("$P1", para1);
+    text1 = text1.replace("$P2", para2);
+    //console.log(text1);
+
+    request_messages.messages[1].content = text1;
+
+    // a new thread blocks here waiting for response. Calling thread continues.
+    const response = await openai.chat.completions.create(request_messages);
+    //   .then(resp => {
+    //   //console.log(resp);
+    //   let resultstr = resp.choices[0].message.content;
+    //   console.log("resultstr=", resultstr);
+    //   if (resultstr == "1") { // not equal
+    //     rc = 1;
+    //   }
+    // });
+
+    // process returned response from openai
+    // response= {
+    // id: 'chatcmpl-AstgJSY1tsAxpQ6j8uYF1NaPzd12N',
+    //   object: 'chat.completion',
+    //     created: 1737647115,
+    //       model: 'gpt-4o-2024-08-06',
+    //         choices: [
+    //           {
+    //             index: 0,
+    //             message: [Object],
+    //             logprobs: null,
+    //             finish_reason: 'stop'
+    //           }
+    //         ],
+    // ...}
+    // console.log("await response=", response);
+    // .message.content is a string value of 1 (not equivalent) or 0 (equivalent)
+    let resultstr = response.choices[0].message.content;
+    // console.log("resultstr=", resultstr);
+    let rc = 0;
+    if (resultstr == "1") { // not equivalent
+        rc = 1;
+    }
+    console.log("rc=", rc);
+    process.exitCode = rc;
+}
+
+const AI_synthesized = "[AI synthesized]";
 
 async function startChat() {
 
@@ -275,7 +392,11 @@ async function startChat() {
                         console.log("ElapsedTime=", elapsedTime);
                         console.log("GOT", chattext);
                         chattext = "";
-                        console.log("EXPECT", chatText[userRespIx], "\n------------");
+                        rtext = chatText[userRespIx];
+                        if (pos = rtext.indexOf(AI_synthesized) > 0) {
+                            rchat = message.text.substring(0, pos);
+                        }
+                        console.log("EXPECT", rtext, "\n------------");
                         let line = userResp[userRespIx];
                         if (line != undefined) {
                             ws.send(util.format(chatFormat, chatInfo.participationId, line));
@@ -288,7 +409,10 @@ async function startChat() {
 
                     console_out(message.text);
                     if (message.text != null && message.text.length > 0) {
-                        chattext = chattext + "\n" + message.text;
+                        //chattext = chattext + "\n" + message.text;
+                        if (pos = message.text.indexOf(AI_synthesized) > 0) {
+                            chattext = message.text.substring(0, pos);
+                        }
                     }
 
                     if (message.display) {

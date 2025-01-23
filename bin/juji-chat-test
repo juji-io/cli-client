@@ -7,12 +7,18 @@ dotenv.config(); // load OPENAI_API_KEY from .env file
 import { request } from "http";
 import OpenAI from "openai";
 import { text } from "stream/consumers";
-//require('dotenv').config();
-
+// https://github.com/mikeal/bent same author as deprecated request-promise
+import bent from 'bent';
+import util from 'util';
+import color from 'colors';
+import readline from 'readline';
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
+
+let debug = process.env.JUJI_DEBUG == "1";
+console.log("debug=", debug, "typeof(debug)=", typeof (debug));
 
 /*
  * parse command line argument
@@ -64,21 +70,18 @@ var ws;
 var timeoutId;
 var userResp, chatText;
 var userRespIx = 0;
+var sumRc = 0;
 var startTime = Date.now();
 
-import pkg from 'bent';
-const { Bent } = pkg;
 
-const bent = new Bent();
-// https://github.com/mikeal/bent same author as deprecated request-promise
 // const bent = require('bent'),
-const util = require('util'),
-    color = require("colors"),
-    readline = require('readline'),
-    rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
+//const util = require('util'),
+//const color = require("colors"),
+//    readline = require('readline'),
+var rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
 
 function console_out(msg) {
     if (msg != null) {
@@ -109,10 +112,13 @@ rl.on('SIGINT', () => {
     rl.question('Are you sure you want to exit? ', (answer) => {
         if (answer.match(/^y(es)?$/i)) {
             rl.close();
-            process.exit(0);
+            process.exit(sumRc);
         }
     });
 });
+
+import fs from 'fs';
+let chatbot_name, user_name;
 
 //
 //
@@ -121,12 +127,13 @@ function loadChatscript() {
     var resp = Array();
     var chitchat = Array();
     try {
-        const buf = require('fs').readFileSync(fn, 'utf8');
+        const buf = fs.readFileSync(fn, 'utf8');
         var lines = buf.split("\n");
         console.log("nlines", lines.length);
         var achitchat = "";
         lines.forEach((line, i) => {
             // console.log(i, ": ", line);
+
             if (i == 0) {
                 // Extract chatbot's name from the first transcript line
                 let foo = line.match(/] (.*): /);
@@ -168,6 +175,7 @@ function loadChatscript() {
                     //console.log("=== foo", foo);
                     user_name = foo[1];
 
+                    let res;
                     if (ress.length > 0) {
                         res = `${user_name}: ${ress[1]}`;
                     }
@@ -184,7 +192,6 @@ function loadChatscript() {
         console.error(err);
     }
 }
-
 
 const system_prompt = "You are given a Context paragraph and two AI response paragraphs. If the two response paragraph express the same intent, then return a 0, otherwise a 1";
 const user_prompt = "[Context] $CONTEXT\n\n[Response 1] $P1\n\n[Response 2] $P2";
@@ -229,6 +236,12 @@ var request_messages_template = {
 //
 async function compare_intent(context1, para1, para2) {
 
+    if (debug) {
+        console.log(`compare_intent()\ncontext=${context1}\nP1=${para1}\nP2=${para2}\n`);
+    }
+    if (para1 == undefined || para2 == undefined) {
+        return;
+    }
     let request_messages = structuredClone(request_messages_template);
 
     let text1 = user_prompt;
@@ -274,10 +287,15 @@ async function compare_intent(context1, para1, para2) {
         rc = 1;
     }
     console.log("rc=", rc);
-    process.exitCode = rc;
+    if (rc > 0) {
+        sumRc = rc;
+    }
+    //process.exitCode = rc;
 }
 
 const AI_synthesized = "[AI synthesized]";
+import WebSocket from 'isomorphic-ws';
+import FormData from 'form-data';
 
 async function startChat() {
 
@@ -285,7 +303,7 @@ async function startChat() {
     // step 1: obtain chat information
     //
     startTime = Date.now();
-    var FormData = require('form-data');
+    // var FormData = require('form-data');
     var form = new FormData();
     form.append('firstName', program.firstName);
 
@@ -304,7 +322,8 @@ async function startChat() {
     //
     // step 2: setup WebSocket connection
     //
-    const WebSocket = require('isomorphic-ws');
+
+    //const WebSocket = require('isomorphic-ws');
     ws = new WebSocket(chatInfo.websocketUrl);
 
     //
@@ -368,7 +387,7 @@ async function startChat() {
 
             // only print out REP's chat messages
             if (message.role == 'rep') {
-                console.log("Clear Timeout...");
+                //console.log("Clear Timeout...");
                 clearTimeout(timeoutId);
                 //console.log("Clear timeoutId:", timeoutId);
 
@@ -390,28 +409,52 @@ async function startChat() {
                         console.log("endOfMessage: true");
                         let elapsedTime = end - startTime;
                         console.log("ElapsedTime=", elapsedTime);
-                        console.log("GOT", chattext);
-                        chattext = "";
-                        rtext = chatText[userRespIx];
-                        if (pos = rtext.indexOf(AI_synthesized) > 0) {
-                            rchat = message.text.substring(0, pos);
+                        //console.log("GOT", chattext);
+                        let p1 = chattext; // current [AI synthesized] paragraph
+                        chattext = ""; // reset chattext
+                        //console.log("userRespIx", userRespIx);
+                        let rtext = chatText[userRespIx]; // chatscript AI Synthesized text
+                        //console.log(`chatText[${userRespIx}] ${rtext}`);
+                        let pos, rchat, p2;
+                        if (rtext != undefined) {
+                            if ((pos = rtext.indexOf(AI_synthesized)) > 0) {
+                                rchat = rtext.substring(0, pos).trim();
+                            }
+                            p2 = rchat; // chatscript [AI synthensized] paragraph
                         }
-                        console.log("EXPECT", rtext, "\n------------");
+                        //console.log("EXPECT rchat=", rchat, "\nrtext=", rtext, "\n------------");
+
                         let line = userResp[userRespIx];
+                        let ix = 0;
                         if (line != undefined) {
                             ws.send(util.format(chatFormat, chatInfo.participationId, line));
                             console.log(`User response[${userRespIx}] ${line}`);
-                            userRespIx++;
+                            ix = userRespIx + 1;
                         }
                         startTime = Date.now();
+
+                        let ctext;
+                        if (userRespIx > 0 && userRespIx < chatText.length) {
+                            ctext = userResp[userRespIx - 1]; // user response from previous offset
+                        }
+                        // do intent comparison
+                        if (p1 != undefined && p2 != undefined && context != undefined) {
+                            compare_intent(ctext, p1, p2);
+                        } else {
+                            console.log("Nothing to compare @", userRespIx);
+                        }
+                        userRespIx = ix;
+
                     }
                 } else if (message.type == 'normal') {
 
                     console_out(message.text);
                     if (message.text != null && message.text.length > 0) {
                         //chattext = chattext + "\n" + message.text;
-                        if (pos = message.text.indexOf(AI_synthesized) > 0) {
-                            chattext = message.text.substring(0, pos);
+                        let pos;
+                        if ((pos = message.text.indexOf(AI_synthesized)) > 0) {
+                            chattext = message.text.substring(0, pos).trim();
+                            //console.log(`message.text=${message.text}\npos=${pos} ${chattext}`);
                         }
                     }
 
@@ -436,12 +479,13 @@ async function startChat() {
                             userRespIx++;
                         }
                     }
-                    console.log("SetTimeOut()...");
+                    //console.log("SetTimeOut()...");
                     timeoutId = setTimeout(function () {
                         let end = Date.now();
-                        console.log("***TIMEOUT*** 10 seconds GOT", chattext);
+                        console.log("***TIMEOUT*** 60 seconds GOT", chattext);
                         chattext = "";
                         console.log("EXPECT", chatText[userRespIx], "\n------------");
+                        // FIXME: skip going to openai to compare intent
                         let line = userResp[userRespIx];
                         if (line != undefined) {
                             ws.send(util.format(chatFormat, chatInfo.participationId, line));
@@ -452,7 +496,7 @@ async function startChat() {
                         console.log("Timeout elapsed time=", elapsedTime);
                         startTime = Date.now();
 
-                    }, 10000);
+                    }, 60000); // 60 seconds timeout
                 } else if (message.type == 'user-joined') {
                     console.log('');
                     console.log(color.blue('=== Welcome to Juji Bot ==='));

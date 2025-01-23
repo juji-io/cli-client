@@ -107,7 +107,7 @@ function main() {
   compare_intent(context, p1, p2);
 }
 
-//console.log("Before main()");
+console.log("Before main()");
 main();
-//console.log("After  main()");
+console.log("After  main()");
 // main thread terminates?

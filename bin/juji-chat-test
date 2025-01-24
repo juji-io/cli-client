@@ -71,6 +71,7 @@ var timeoutId;
 var userResp, chatText;
 var userRespIx = 0;
 var sumRc = 0;
+var numPasses = 0, numFails = 0;
 var startTime = Date.now();
 
 
@@ -170,9 +171,9 @@ function loadChatscript() {
                     if (bar != undefined) {
                         ress[1] = bar[1].trim();
                     }
-                    console.log("bar ", bar)
-                    console.log("--- res", ress);
-                    console.log("=== foo", foo);
+                    // console.log("bar ", bar)
+                    // console.log("--- res", ress);
+                    // console.log("=== foo", foo);
                     user_name = foo[1];
 
                     let res;
@@ -289,6 +290,9 @@ async function compare_intent(context1, para1, para2) {
     let testResult = "PASS";
     if (rc == 1) {
         testResult = "FAILED";
+        numFails++;
+    } else {
+        numPasses++;
     }
     console.log("[AI synthesized] intention comparison:", testResult);
     if (rc > 0) {
@@ -449,6 +453,8 @@ async function startChat() {
                         }
                         userRespIx = ix;
                         if (ix >= userResp.length) {
+                            console.log("Number of PASSES:", numPasses);
+                            console.log("Number of FAILS:", numFails);
                             process.exit(sumRc);  // exit after ran out userResp
                         }
 
